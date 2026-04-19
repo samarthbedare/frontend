@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Shipment Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+        .dashboard-container { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem; animation: fadeUp 0.6s ease forwards; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); padding: 1.5rem 2rem; border-radius: 16px; border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.4); }
+        .header-title { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        
+        .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+        
+        .glass-card { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(16px); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.05); padding: 2rem; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); }
+        .card-title { color: #a78bfa; font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.8rem; margin-bottom: 1.5rem; }
+        
+        .info-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        .info-label { font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 0.3rem; }
+        .info-value { font-size: 1.1rem; color: #f8fafc; font-weight: 500; }
+        
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; cursor: pointer; border: none; }
+        .btn-outline { border: 1px solid rgba(148, 163, 184, 0.4); color: #cbd5e1; background: transparent; }
+        .btn-outline:hover { border-color: #f1f5f9; color: #fff; background: rgba(255,255,255,0.05); }
+        .btn-primary { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; }
+        .btn-delete { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+        
+        .form-control { width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: inherit; margin-bottom: 0.5rem; }
+        .form-label { display: block; margin-bottom: 0.5rem; color: #cbd5e1; font-size: 0.9rem; }
+        
+        .val-badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        
+        .error-banner { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
+        .success-banner { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #6ee7b7; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+<div class="glow-orb" style="background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%);"></div>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <h1 class="header-title" th:text="${'Tracking No. #' + shipment.shipmentId}">Tracking #ID</h1>
+            <p style="color: #94a3b8; margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+                State: 
+                <span th:if="${shipment.shipmentStatus == 'CREATED'}" style="color:#cbd5e1">Manifest Created</span>
+                <span th:if="${shipment.shipmentStatus == 'IN-TRANSIT'}" style="color:#93c5fd">Dispatched / In-Transit</span>
+                <span th:if="${shipment.shipmentStatus == 'DELIVERED'}" style="color:#6ee7b7">Successfully Delivered</span>
+                <span th:if="${shipment.shipmentStatus != 'CREATED' && shipment.shipmentStatus != 'IN-TRANSIT' && shipment.shipmentStatus != 'DELIVERED'}" th:text="${shipment.shipmentStatus}" style="color:#fcd34d">Unknown</span>
+            </p>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <form th:action="@{/frontend/shipments/{id}/delete(id=${shipment.shipmentId})}" method="post" onsubmit="return confirm('Cancel and physically delete this shipment?');" style="margin: 0;">
+                <button type="submit" class="btn btn-delete">Obliterate Shipment</button>
+            </form>
+            <a th:href="@{/frontend/shipments}" class="btn btn-outline">&larr; Tracking Board</a>
+        </div>
+    </div>
+
+    <div th:if="${error}" class="error-banner" th:text="${error}"></div>
+    <div th:if="${successMessage}" class="success-banner" th:text="${successMessage}"></div>
+
+    <div class="card-grid">
+        <!-- Delivery Profile -->
+        <div class="glass-card">
+            <h2 class="card-title">Logistics Profile</h2>
+            <div class="info-grid">
+                <div>
+                    <div class="info-label">Customer ID</div>
+                    <div class="info-value" style="font-family:'JetBrains Mono', monospace;" th:text="${shipment.customerId}">CID</div>
+                </div>
+                <div>
+                    <div class="info-label">Fulfillment Origin (Store ID)</div>
+                    <div class="info-value" style="font-family:'JetBrains Mono', monospace;" th:text="${shipment.storeId}">SID</div>
+                </div>
+                <div>
+                    <div class="info-label">Delivery Coordinates / Address</div>
+                    <div class="info-value" style="color:#c4b5fd;" th:text="${shipment.deliveryAddress}">Address</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Management Pane -->
+        <div class="glass-card">
+            <h2 class="card-title">Network Operator</h2>
+            <form th:action="@{/frontend/shipments/{id}/update-status(id=${shipment.shipmentId})}" method="post">
+                <div class="form-group" style="margin-bottom:1.5rem;">
+                    <label class="form-label">Transition Lifecycle Status</label>
+                    <select name="status" class="form-control" style="appearance: auto; cursor:pointer;" required>
+                        <option value="CREATED" th:selected="${shipment.shipmentStatus == 'CREATED'}">CREATED - Manifest Pending</option>
+                        <option value="IN-TRANSIT" th:selected="${shipment.shipmentStatus == 'IN-TRANSIT'}">IN-TRANSIT - Out for Delivery</option>
+                        <option value="DELIVERED" th:selected="${shipment.shipmentStatus == 'DELIVERED'}">DELIVERED - Confirmed Local Drop</option>
+                    </select>
+                    <p style="font-size:0.8rem; color:#94a3b8; margin-top:0.5rem;">Warning: Triggering physical phase shifts propagates updates into the global supply chain grid.</p>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%">Commit Phase Shift</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

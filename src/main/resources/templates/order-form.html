@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Create Order</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+        .dashboard-container { max-width: 800px; margin: 0 auto; padding: 3rem 1.5rem; animation: fadeUp 0.6s ease forwards; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); padding: 1.5rem 2rem; border-radius: 16px; border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.4); }
+        .header-title { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .filter-form { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05); padding: 2rem; border-radius: 12px; display: flex; flex-direction: column; gap: 1.5rem; }
+        .filter-input { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.8rem 1rem; border-radius: 8px; font-family: inherit; font-size: 1rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.8rem 1.2rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s ease; cursor: pointer; border: none; }
+        .btn-outline { border: 1px solid rgba(148, 163, 184, 0.4); color: #cbd5e1; background: transparent; }
+        .btn-primary { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; width: 100%; box-shadow: 0 4px 15px rgba(139,92,246,0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(139,92,246,0.5); }
+        .error-banner { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem;}
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+       <h1 class="header-title">Checkout Configuration</h1>
+       <a th:href="@{/frontend/orders}" class="btn btn-outline">&larr; Cancel</a>
+    </div>
+
+    <div th:if="${error}" class="error-banner" th:text="${error}"></div>
+
+    <form th:action="@{/frontend/orders}" method="post" class="filter-form">
+        <div>
+            <label style="display:block; color: #a78bfa; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase;">Customer Reference ID</label>
+            <input type="number" name="customerId" required class="filter-input" style="width: 100%; box-sizing: border-box;" />
+        </div>
+        <div>
+            <label style="display:block; color: #a78bfa; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase;">Fulfillment Store Node ID</label>
+            <input type="number" name="storeId" required class="filter-input" style="width: 100%; box-sizing: border-box;" />
+        </div>
+        <div>
+            <label style="display:block; color: #a78bfa; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase;">Delivery Address (If Applicable)</label>
+            <input type="text" name="deliveryAddress" class="filter-input" style="width: 100%; box-sizing: border-box;" placeholder="123 App St..." />
+        </div>
+        
+        <div style="background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+            <p style="color: #6ee7b7; font-weight: bold; margin-top: 0; text-transform: uppercase; font-size: 0.85rem;">Line Item Insertion</p>
+            <div style="display: flex; gap: 0.5rem;">
+                <div style="flex:1">
+                    <label style="font-size: 0.75rem; color:#94a3b8; display:block;">Product ID</label>
+                    <input type="number" name="productId" required class="filter-input" style="width: 100%; box-sizing: border-box; background: #0f172a;" />
+                </div>
+                <div style="width: 80px;">
+                    <label style="font-size: 0.75rem; color:#94a3b8; display:block;">Qty</label>
+                    <input type="number" name="quantity" required class="filter-input" style="width: 100%; box-sizing: border-box; background: #0f172a;" />
+                </div>
+                <div style="width: 120px;">
+                    <label style="font-size: 0.75rem; color:#94a3b8; display:block;">Unit Price $</label>
+                    <input type="number" step="0.01" name="unitPrice" required class="filter-input" style="width: 100%; box-sizing: border-box; background: #0f172a;" />
+                </div>
+            </div>
+            <!-- More items could be added logically via JavaScript if dynamic addition was supported here, simple static representation for now. -->
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Complete Secure Checkout</button>
+    </form>
+</div>
+</body>
+</html>

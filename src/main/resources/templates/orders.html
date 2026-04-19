@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Orders Database</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+        .dashboard-container { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem; animation: fadeUp 0.6s ease forwards; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); padding: 1.5rem 2rem; border-radius: 16px; border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.4); }
+        .header-title { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .filter-form { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05); padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+        .filter-input { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.6rem 1rem; border-radius: 8px; font-family: inherit; }
+        .glass-table-wrapper { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(16px); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.05); overflow: hidden; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); }
+        .styled-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .styled-table thead tr { background: rgba(15, 23, 42, 0.8); color: #c4b5fd; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; }
+        .styled-table th, .styled-table td { padding: 1.2rem 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .styled-table tbody tr:hover { background: rgba(139, 92, 246, 0.08); transform: scale(1.002); }
+        .val-badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .badge-status { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
+        .action-flex { display: flex; gap: 0.5rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; cursor: pointer; border: none; }
+        .btn-outline { border: 1px solid rgba(148, 163, 184, 0.4); color: #cbd5e1; background: transparent; }
+        .btn-outline:hover { border-color: #f1f5f9; color: #fff; background: rgba(255,255,255,0.05); }
+        .btn-primary { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; }
+        .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+        .btn-delete { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+        .error-banner { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
+        .success-banner { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #6ee7b7; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+<div class="glow-orb" style="background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%);"></div>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <h1 class="header-title">Order Management</h1>
+            <p style="color: #94a3b8; margin: 0.5rem 0 0 0; font-size: 0.9rem;">Monitor and administer active system orders</p>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <a th:href="@{/frontend/orders/new}" class="btn btn-primary">+ New Order</a>
+            <a th:href="@{/team}" class="btn btn-outline">&larr; Team</a>
+        </div>
+    </div>
+    
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <form class="filter-form" th:action="@{/frontend/orders/search}" method="get" style="flex: 1;">
+            <span style="font-size: 0.85rem; font-weight: bold; color: #a78bfa; text-transform: uppercase;">By ID: </span>
+            <input type="number" name="id" placeholder="Order ID" class="filter-input" style="flex:1;" />
+            <button type="submit" class="btn btn-outline">Find</button>
+        </form>
+        <form class="filter-form" th:action="@{/frontend/orders/search}" method="get" style="flex: 1;">
+            <span style="font-size: 0.85rem; font-weight: bold; color: #6ee7b7; text-transform: uppercase;">By Customer ID: </span>
+            <input type="number" name="customerId" placeholder="Customer ID" class="filter-input" style="flex:1;" />
+            <button type="submit" class="btn btn-outline">Fetch</button>
+        </form>
+        <form class="filter-form" th:action="@{/frontend/orders/search}" method="get" style="flex: 1;">
+            <span style="font-size: 0.85rem; font-weight: bold; color: #fbbf24; text-transform: uppercase;">By Store ID: </span>
+            <input type="number" name="storeId" placeholder="Store ID" class="filter-input" style="flex:1;" />
+            <button type="submit" class="btn btn-outline">Fetch</button>
+        </form>
+    </div>
+
+    <div th:if="${error}" class="error-banner" th:text="${error}"></div>
+    <div th:if="${successMessage}" class="success-banner" th:text="${successMessage}"></div>
+
+    <div class="glass-table-wrapper" style="margin-top: 1rem;">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date/Time</th>
+                    <th>Customer ID</th>
+                    <th>Status</th>
+                    <th>Store ID</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="order : ${orders}">
+                    <td style="font-family: 'JetBrains Mono', monospace; color: #94a3b8;" th:text="${order.orderId}">1</td>
+                    <td th:text="${order.orderTms != null ? order.orderTms : 'Not recorded'}">Time</td>
+                    <td th:text="${order.customerId}">1</td>
+                    <td><span class="val-badge badge-status" th:text="${order.orderStatus}">STATUS</span></td>
+                    <td th:text="${order.storeId}">1</td>
+                    <td class="action-flex">
+                        <a th:href="@{/frontend/orders/{id}(id=${order.orderId})}" class="btn btn-outline btn-sm">View</a>
+                        <form th:action="@{/frontend/orders/{id}/delete(id=${order.orderId})}" method="post" onsubmit="return confirm('Delete this order completely?');">
+                            <button type="submit" class="btn btn-delete btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(orders)}">
+                    <td colspan="6" style="text-align: center; color: #94a3b8; padding: 2rem;">No orders matched the requested criteria.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

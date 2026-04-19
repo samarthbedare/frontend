@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Product Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+        .details-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .details-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 16px;
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        .details-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .details-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-brand {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(59, 130, 246, 0.15);
+            color: #93c5fd;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+        }
+
+        .detail-label {
+            display: block;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .value-price {
+            font-family: 'JetBrains Mono', monospace;
+            color: #fca5a5;
+            font-size: 1.3rem;
+        }
+
+        .btn-flex {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            color: #cbd5e1;
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            border-color: #f1f5f9;
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .btn-edit {
+            background: rgba(252, 211, 77, 0.1);
+            color: #fcd34d;
+            border: 1px solid rgba(252, 211, 77, 0.4);
+        }
+
+        .btn-edit:hover {
+            background: rgba(252, 211, 77, 0.2);
+            color: #fff;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+<div class="glow-orb"></div>
+<div class="details-wrapper">
+    <div class="details-card">
+        
+        <div class="details-header">
+            <div style="position: absolute; top: 0; left: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #64748b;">
+                ID: <span th:text="${product.productId}">1</span>
+            </div>
+            <h1 class="details-title" th:text="${product.productName}">Product Name</h1>
+            <span class="badge-brand" th:text="${product.brand}">Brand</span>
+        </div>
+
+        <div class="details-grid">
+            <div class="detail-item">
+                <span class="detail-label">Colour</span>
+                <div class="detail-value" style="display: flex; align-items: center; gap: 8px;">
+                    <span th:style="'display: inline-block; width: 14px; height: 14px; border-radius: 50%; opacity: 0.9; background-color: ' + ${product.colour != null ? (product.colour.toUpperCase() == 'BROWN' ? '#8B4513' : (product.colour.toUpperCase() == 'BLUE' ? '#3b82f6' : (product.colour.toUpperCase() == 'GREEN' ? '#10b981' : (product.colour.toUpperCase() == 'RED' ? '#ef4444' : (product.colour.toUpperCase() == 'BLACK' ? '#1e293b' : '#94a3b8'))))) : '#94a3b8'}"></span>
+                    <span th:text="${product.colour}">Red</span>
+                </div>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Size</span>
+                <span class="detail-value" th:text="${product.size}">XL</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Unit Price</span>
+                <span class="detail-value value-price" th:text="'$' + ${product.unitPrice}">$19.99</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Rating</span>
+                <div class="detail-value">
+                    <span style="color: #fbbf24;">★ </span>
+                    <span th:text="${product.rating}">5.0</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Assuming description exists logically or we can just leave it layout wise -->
+        <div class="detail-item" style="margin-bottom: 2rem;">
+            <span class="detail-label">System Meta</span>
+            <span class="detail-value" style="font-size: 0.9rem; font-weight: normal; color: #94a3b8;">
+                Fetched via /api/v1/products/[[${product.productId}]]
+            </span>
+        </div>
+
+        <div class="btn-flex">
+            <a th:href="@{/team}" class="btn btn-outline" style="font-size: 0.85rem; padding: 0.8rem 1rem;">&larr; Team</a>
+            <a th:href="@{/frontend/products}" class="btn btn-outline">&larr; Catalog</a>
+            <a th:href="@{/frontend/products/{id}/edit(id=${product.productId})}" class="btn btn-edit">Edit Product</a>
+        </div>
+        
+    </div>
+</div>
+</body>
+</html>
