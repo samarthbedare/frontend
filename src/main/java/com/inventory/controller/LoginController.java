@@ -1,6 +1,6 @@
 package com.inventory.controller;
 
-import com.inventory.service.BackendHttpClient;
+import com.inventory.service.AuthServiceClient;
 import com.inventory.util.SessionJwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class LoginController {
 
-    private final BackendHttpClient backendHttpClient;
+    private final AuthServiceClient authServiceClient;
 
     @Autowired
-    public LoginController(BackendHttpClient backendHttpClient) {
-        this.backendHttpClient = backendHttpClient;
+    public LoginController(AuthServiceClient authServiceClient) {
+        this.authServiceClient = authServiceClient;
     }
 
     @GetMapping("/login")
@@ -49,7 +49,7 @@ public class LoginController {
             Model model) {
 
         try {
-            String token = backendHttpClient.login(username, password);
+            String token = authServiceClient.login(username, password);
             SessionJwtUtil.setJwt(request, token);
             return "redirect:" + redirectUrl;
         } catch (Exception e) {

@@ -146,6 +146,10 @@
         <h1 class="form-title" th:text="${isEdit} ? 'Edit Catalog Entry' : 'New Catalog Entry'">Form</h1>
         <p class="form-subtitle" th:text="${isEdit} ? 'Modifying existing data' : 'Integrate a new product into the database'">Subtitle</p>
 
+        <div th:if="${error}" class="error-banner">
+            <span th:text="${error}"></span>
+        </div>
+
         <form th:action="${isEdit} ? @{/frontend/products/{id}/edit(id=${product.productId})} : @{/frontend/products}" 
               th:object="${product}" method="post">
             
@@ -163,14 +167,7 @@
 
                 <div class="form-group">
                     <label class="form-label">Colour</label>
-                    <select class="form-input" th:field="*{colour}" required style="appearance: none;">
-                        <option value="RED">Red</option>
-                        <option value="BLUE">Blue</option>
-                        <option value="GREEN">Green</option>
-                        <option value="BROWN">Brown</option>
-                        <option value="BLACK">Black</option>
-                        <option value="WHITE">White</option>
-                    </select>
+                    <input class="form-input" type="text" th:field="*{colour}" required placeholder="Enter colour (e.g. Red, Blue, Navy)" />
                 </div>
 
                 <div class="form-group">

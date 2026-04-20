@@ -3,7 +3,7 @@ package com.inventory.controller;
 import com.inventory.model.Order;
 import com.inventory.model.OrderRequest;
 import com.inventory.model.OrderItemRequest;
-import com.inventory.service.BackendHttpClient;
+import com.inventory.service.OrderServiceClient;
 import com.inventory.util.SessionJwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,26 +21,26 @@ import java.util.Map;
 @RequestMapping("/frontend/orders")
 public class OrderFrontendController {
 
-    private final BackendHttpClient backendHttpClient;
+    private final OrderServiceClient orderServiceClient;
 
     @Autowired
-    public OrderFrontendController(BackendHttpClient backendHttpClient) {
-        this.backendHttpClient = backendHttpClient;
+    public OrderFrontendController(OrderServiceClient orderServiceClient) {
+        this.orderServiceClient = orderServiceClient;
     }
 
     @GetMapping
     public String viewOrders(HttpServletRequest request, Model model) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            List<Order> orders = backendHttpClient.getAllOrders(token);
+            List<Order> orders = orderServiceClient.getAllOrders(token);
             model.addAttribute("orders", orders);
-            return "orders";
+            return "orders/orders";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
             }
             model.addAttribute("error", "Failed to fetch orders: " + e.getMessage());
-            return "orders";
+            return "orders/orders";
         }
     }
 
@@ -64,9 +64,9 @@ public class OrderFrontendController {
     public String viewOrdersByCustomer(@PathVariable Long customerId, HttpServletRequest request, Model model, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            List<Order> orders = backendHttpClient.getOrdersByCustomerId(customerId, token);
+            List<Order> orders = orderServiceClient.getOrdersByCustomerId(customerId, token);
             model.addAttribute("orders", orders);
-            return "orders";
+            return "orders/orders";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
@@ -80,9 +80,9 @@ public class OrderFrontendController {
     public String viewOrdersByStore(@PathVariable Long storeId, HttpServletRequest request, Model model, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            List<Order> orders = backendHttpClient.getOrdersByStoreId(storeId, token);
+            List<Order> orders = orderServiceClient.getOrdersByStoreId(storeId, token);
             model.addAttribute("orders", orders);
-            return "orders";
+            return "orders/orders";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
@@ -96,9 +96,9 @@ public class OrderFrontendController {
     public String viewOrderDetails(@PathVariable Long id, HttpServletRequest request, Model model, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            Order order = backendHttpClient.getOrderById(id, token);
+            Order order = orderServiceClient.getOrderById(id, token);
             model.addAttribute("order", order);
-            return "order-details";
+            return "orders/order-details";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
@@ -111,7 +111,7 @@ public class OrderFrontendController {
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("orderReq", new OrderRequest());
-        return "order-form";
+        return "orders/order-form";
     }
 
     @PostMapping
@@ -135,7 +135,7 @@ public class OrderFrontendController {
                 }
             }
             orderReq.setItems(items);
-            backendHttpClient.createOrder(orderReq, token);
+            orderServiceClient.createOrder(orderReq, token);
             redirectAttrs.addFlashAttribute("successMessage", "Order placed successfully.");
             return "redirect:/frontend/orders";
         } catch (Exception e) {
@@ -153,7 +153,7 @@ public class OrderFrontendController {
         try {
             Map<String, String> payload = new HashMap<>();
             payload.put("orderStatus", orderStatus);
-            backendHttpClient.updateOrderStatus(id, payload, token);
+            orderServiceClient.updateOrderStatus(id, payload, token);
             redirectAttrs.addFlashAttribute("successMessage", "Order status updated.");
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
@@ -170,7 +170,7 @@ public class OrderFrontendController {
         try {
             Map<String, Long> payload = new HashMap<>();
             payload.put("shipmentId", shipmentId);
-            backendHttpClient.linkShipment(id, payload, token);
+            orderServiceClient.linkShipment(id, payload, token);
             redirectAttrs.addFlashAttribute("successMessage", "Shipment linked successfully.");
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
@@ -185,7 +185,7 @@ public class OrderFrontendController {
     public String deleteOrder(@PathVariable Long id, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            backendHttpClient.deleteOrder(id, token);
+            orderServiceClient.deleteOrder(id, token);
             redirectAttrs.addFlashAttribute("successMessage", "Order deleted securely.");
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
