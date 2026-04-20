@@ -296,7 +296,12 @@ public class BackendHttpClient {
         if (token != null && !token.isEmpty()) requestBuilder.header("Authorization", "Bearer " + token);
         HttpRequest request = requestBuilder.build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        return response.statusCode() == 200;
+        
+        if (response.statusCode() == 200) {
+            String body = response.body();
+            return body != null && body.trim().equalsIgnoreCase("true");
+        }
+        return false;
     }
 
     // --- ORDER SERVICE ---
