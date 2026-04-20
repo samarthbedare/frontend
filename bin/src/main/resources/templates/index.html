@@ -134,14 +134,17 @@
     </div>
   </div>
 
-  <!-- Button → /team -->
-  <div class="btn-wrap">
+  <!-- Button → /team and /login -->
+  <div class="btn-wrap" style="display:flex; gap: 1.5rem; justify-content: center; align-items: center;">
     <a th:href="@{/team}" class="btn-primary">
       Meet the Team
       <svg width="16" height="16" fill="none" stroke="currentColor"
            stroke-width="2.5" viewBox="0 0 24 24">
         <path d="M5 12h14M13 6l6 6-6 6"/>
       </svg>
+    </a>
+    <a th:href="@{/login}" style="padding: 0.85rem 1.8rem; border-radius: 50px; font-weight: 700; background: rgba(255,255,255,0.05); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; transition: all 0.3s ease;">
+      Admin Login
     </a>
   </div>
 

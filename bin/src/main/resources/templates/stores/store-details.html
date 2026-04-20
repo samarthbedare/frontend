@@ -88,9 +88,35 @@
                 </div>
             </div>
 
-            <!-- Update Store Link -->
+            <!-- Update Store Form -->
             <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 2rem 0;">
-            <a th:href="@{/frontend/stores/{id}/edit(id=${store.storeId})}" class="btn btn-outline" style="width: 100%; justify-content: center;">Edit Store Details</a>
+            <h3 style="color: #cbd5e1; font-size: 1rem; margin-bottom: 1rem;">Update Details</h3>
+            <form th:action="@{/frontend/stores/{id}/update(id=${store.storeId})}" method="post">
+                <input type="hidden" name="storeId" th:value="${store.storeId}"/>
+                <div class="form-group" style="margin-bottom:1rem;">
+                    <label class="form-label">Store Name</label>
+                    <input type="text" name="storeName" th:value="${store.storeName}" class="form-control" required/>
+                </div>
+                <div class="form-group" style="margin-bottom:1rem;">
+                    <label class="form-label">Web Address</label>
+                    <input type="url" name="webAddress" th:value="${store.webAddress}" class="form-control"/>
+                </div>
+                <div class="form-group" style="margin-bottom:1rem;">
+                    <label class="form-label">Physical Address</label>
+                    <input type="text" name="physicalAddress" th:value="${store.physicalAddress}" class="form-control" required/>
+                </div>
+                <div style="display:flex; gap:1rem; margin-bottom: 1rem;">
+                    <div style="flex:1;">
+                        <label class="form-label">Latitude</label>
+                        <input type="number" step="any" name="latitude" th:value="${store.latitude}" class="form-control"/>
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">Longitude</label>
+                        <input type="number" step="any" name="longitude" th:value="${store.longitude}" class="form-control"/>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-outline" style="width: 100%">Save Changes</button>
+            </form>
         </div>
 
         <!-- Inventory List Card -->
@@ -147,9 +173,19 @@
                 </table>
             </div>
 
-            <!-- Add new inventory to store link -->
-            <div style="padding: 1.5rem 2rem; background: rgba(15, 23, 42, 0.4); border-top: 1px solid rgba(255,255,255,0.05); text-align: center;">
-                <a th:href="@{/frontend/stores/{id}/inventory/add(id=${store.storeId})}" class="btn btn-primary" style="width: 100%; justify-content: center;">+ Add Inventory to Store</a>
+            <!-- Add new inventory to store form -->
+            <div style="padding: 1.5rem 2rem; background: rgba(15, 23, 42, 0.4); border-top: 1px solid rgba(255,255,255,0.05);">
+                <form th:action="@{/frontend/stores/{id}/inventory(id=${store.storeId})}" method="post" style="display:flex; gap:1rem; align-items: flex-end;">
+                    <div style="flex:1;">
+                        <label class="form-label" style="font-size:0.8rem;">Product ID</label>
+                        <input type="number" name="productId" class="form-control" style="margin:0; padding:0.6rem;" required/>
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label" style="font-size:0.8rem;">Initial Stock</label>
+                        <input type="number" name="productInventory" class="form-control" style="margin:0; padding:0.6rem;" min="0" required/>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:0.6rem 1.2rem;">Link Product</button>
+                </form>
             </div>
         </div>
     </div>

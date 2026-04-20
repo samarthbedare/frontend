@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Order Details</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+        .dashboard-container { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem; animation: fadeUp 0.6s ease forwards; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); padding: 1.5rem 2rem; border-radius: 16px; border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.4); }
+        .header-title { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        
+        .filter-input { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.6rem 1rem; border-radius: 8px; font-family: inherit; }
+        .glass-table-wrapper { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(16px); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.05); overflow: hidden; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); }
+        .styled-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .styled-table thead tr { background: rgba(15, 23, 42, 0.8); color: #c4b5fd; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; }
+        .styled-table th, .styled-table td { padding: 1.2rem 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .val-badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .badge-status { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; cursor: pointer; border: none; }
+        .btn-outline { border: 1px solid rgba(148, 163, 184, 0.4); color: #cbd5e1; background: transparent; }
+        .btn-primary { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; }
+        .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+        .success-banner { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #6ee7b7; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+       <h1 class="header-title" th:text="'Order #' + ${order != null ? order.orderId : 'N/A'}">Order Details</h1>
+       <a th:href="@{/frontend/orders}" class="btn btn-outline">&larr; Back to Orders</a>
+    </div>
+
+    <div th:if="${successMessage}" class="success-banner" th:text="${successMessage}"></div>
+    
+    <div th:if="${order != null}" style="background: rgba(15, 23, 42, 0.4); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 2rem;">
+        <p><strong>Customer ID:</strong> <span th:text="${order.customerId}"></span></p>
+        <p><strong>Store ID:</strong> <span th:text="${order.storeId}"></span></p>
+        <p><strong>Status:</strong> <span class="val-badge badge-status" th:text="${order.orderStatus}"></span></p>
+        <p><strong>Order Placed:</strong> <span th:text="${order.orderTms != null ? order.orderTms : 'Not recorded'}"></span></p>
+        
+        <form th:action="@{/frontend/orders/{id}/status(id=${order.orderId})}" method="post" style="margin-top: 1.5rem; display: flex; gap: 0.5rem; align-items: center; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+            <strong style="color:#a78bfa;">Status Configuration:</strong>
+            <select name="orderStatus" class="filter-input" style="padding: 0.4rem; background: #0f172a;" th:value="${order.orderStatus}">
+                <option value="OPEN" th:selected="${order.orderStatus == 'OPEN'}">OPEN</option>
+                <option value="PAID" th:selected="${order.orderStatus == 'PAID'}">PAID</option>
+                <option value="SHIPPED" th:selected="${order.orderStatus == 'SHIPPED'}">SHIPPED</option>
+                <option value="COMPLETE" th:selected="${order.orderStatus == 'COMPLETE'}">COMPLETE</option>
+                <option value="CANCELLED" th:selected="${order.orderStatus == 'CANCELLED'}">CANCELLED</option>
+                <option value="REFUNDED" th:selected="${order.orderStatus == 'REFUNDED'}">REFUNDED</option>
+            </select>
+            <button type="submit" class="btn btn-primary btn-sm">Commit State</button>
+        </form>
+        
+        <form th:action="@{/frontend/orders/{id}/shipment(id=${order.orderId})}" method="post" style="margin-top: 1rem; display: flex; gap: 0.5rem; align-items: center; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+            <strong style="color:#a78bfa;">Link Shipment ID:</strong>
+            <input type="number" name="shipmentId" required class="filter-input" style="padding: 0.4rem; background: #0f172a;" placeholder="Shipment ID..." />
+            <button type="submit" class="btn btn-primary btn-sm">Link Shipment</button>
+        </form>
+    </div>
+
+    <h3 th:if="${order != null}" style="color: #c4b5fd;">Checkout Breakdown</h3>
+    <div th:if="${order != null}" class="glass-table-wrapper" style="margin-top: 1rem;">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Line Item ID</th>
+                    <th>Product ID</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Shipment ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${order.items}">
+                    <td style="color:#94a3b8;" th:text="${item.lineItemId}"></td>
+                    <td th:text="${item.productId}"></td>
+                    <td th:text="${item.quantity}"></td>
+                    <td style="color: #6ee7b7;" th:text="'$' + ${item.unitPrice}"></td>
+                    <td th:text="${item.shipmentId != null ? item.shipmentId : 'Unassigned'}"></td>
+                </tr>
+                <tr th:if="${order.items == null || #lists.isEmpty(order.items)}">
+                    <td colspan="5" style="text-align: center; color: #94a3b8; padding: 2rem;">No manifest details attached directly to this order summary JSON.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

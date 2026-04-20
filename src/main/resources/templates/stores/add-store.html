@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Create New Store</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+        .dashboard-container { max-width: 600px; margin: 0 auto; padding: 3rem 1.5rem; animation: fadeUp 0.6s ease forwards; }
+        .dashboard-header { margin-bottom: 2rem; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); padding: 1.5rem 2rem; border-radius: 16px; border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.4); text-align: center; }
+        .header-title { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        
+        .glass-card { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(16px); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.05); padding: 2.5rem; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        .form-label { display: block; margin-bottom: 0.5rem; color: #cbd5e1; font-size: 0.9rem; font-weight: 600; }
+        .form-control { width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: inherit; margin-bottom: 0.5rem; transition: border-color 0.3s ease; }
+        .form-control:focus { outline: none; border-color: #8b5cf6; }
+        
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.8rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1rem; transition: all 0.3s ease; cursor: pointer; border: none; width: 100%; }
+        .btn-primary { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(139, 92, 246, 0.5); }
+        .btn-outline { border: 1px solid rgba(148, 163, 184, 0.4); color: #cbd5e1; background: transparent; margin-top: 1rem; }
+        .btn-outline:hover { border-color: #f1f5f9; color: #fff; background: rgba(255,255,255,0.05); }
+        
+        .error-banner { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
+        
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+<div class="glow-orb" style="background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%);"></div>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1 class="header-title">Create New Store</h1>
+        <p style="color: #94a3b8; margin: 0.5rem 0 0 0; font-size: 0.9rem;">Enter the details for the new store location.</p>
+    </div>
+
+    <div th:if="${error}" class="error-banner" th:text="${error}"></div>
+
+    <div class="glass-card">
+        <form th:action="@{/frontend/stores}" method="post">
+            <div class="form-group">
+                <label class="form-label">Store Name</label>
+                <input type="text" name="storeName" class="form-control" required placeholder="e.g. Downtown Branch"/>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Web Address</label>
+                <input type="url" name="webAddress" class="form-control" placeholder="https://example.com"/>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Physical Address</label>
+                <input type="text" name="physicalAddress" class="form-control" required placeholder="123 Main St, City"/>
+            </div>
+            <div class="form-group" style="display:flex; gap:1rem;">
+                <div style="flex:1;">
+                    <label class="form-label">Latitude</label>
+                    <input type="number" step="any" name="latitude" class="form-control" placeholder="e.g. 40.7128"/>
+                </div>
+                <div style="flex:1;">
+                    <label class="form-label">Longitude</label>
+                    <input type="number" step="any" name="longitude" class="form-control" placeholder="e.g. -74.0060"/>
+                </div>
+            </div>
+            <div style="margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary">Create Store</button>
+                <a th:href="@{/frontend/stores}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

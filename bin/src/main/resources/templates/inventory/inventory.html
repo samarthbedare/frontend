@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Global Inventory Search</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+        .dashboard-container { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem; animation: fadeUp 0.6s ease forwards; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); padding: 1.5rem 2rem; border-radius: 16px; border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.4); }
+        .header-title { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .filter-form { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05); padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+        .filter-input { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.6rem 1rem; border-radius: 8px; font-family: inherit; }
+        .glass-table-wrapper { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(16px); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.05); overflow: hidden; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); margin-top: 1rem; }
+        .styled-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .styled-table thead tr { background: rgba(15, 23, 42, 0.8); color: #c4b5fd; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; }
+        .styled-table th, .styled-table td { padding: 1.2rem 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); color:#fff; }
+        .styled-table tbody tr:hover { background: rgba(139, 92, 246, 0.08); transform: scale(1.002); }
+        .val-badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; cursor: pointer; border: none; }
+        .btn-outline { border: 1px solid rgba(148, 163, 184, 0.4); color: #cbd5e1; background: transparent; }
+        .btn-outline:hover { border-color: #f1f5f9; color: #fff; background: rgba(255,255,255,0.05); }
+        .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+        .error-banner { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+<div class="glow-orb" style="background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%);"></div>
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <h1 class="header-title">System Inventory</h1>
+            <p style="color: #94a3b8; margin: 0.5rem 0 0 0; font-size: 0.9rem;">Global search module for product inventory levels</p>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <a th:href="@{/team}" class="btn btn-outline">&larr; Team</a>
+        </div>
+    </div>
+    
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <form class="filter-form" th:action="@{/frontend/inventory}" method="get" style="flex: 1;">
+            <span style="font-size: 0.85rem; font-weight: bold; color: #a78bfa; text-transform: uppercase;">By Product ID: </span>
+            <input type="number" name="productId" placeholder="Product ID" class="filter-input" style="flex:1;" required/>
+            <button type="submit" class="btn btn-outline">Query Stock</button>
+        </form>
+        <form class="filter-form" th:action="@{/frontend/inventory}" method="get" style="flex: 1;">
+            <span style="font-size: 0.85rem; font-weight: bold; color: #6ee7b7; text-transform: uppercase;">By Store ID: </span>
+            <input type="number" name="storeId" placeholder="Store ID" class="filter-input" style="flex:1;" required/>
+            <button type="submit" class="btn btn-outline">Query Location</button>
+        </form>
+    </div>
+
+    <div th:if="${error}" class="error-banner" th:text="${error}"></div>
+
+    <div class="glass-table-wrapper" th:if="${inventoryList != null}">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Inventory Record ID</th>
+                    <th>Product ID</th>
+                    <th>Store / Location ID</th>
+                    <th>Current Stock</th>
+                    <th>Location Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="inv : ${inventoryList}">
+                    <td style="font-family: 'JetBrains Mono', monospace; color: #94a3b8;" th:text="${inv.inventoryId}">1</td>
+                    <td th:text="${inv.productId}">1</td>
+                    <td th:text="${inv.storeId}">1</td>
+                    <td><span class="val-badge" style="background: rgba(16, 185, 129, 0.15); color: #6ee7b7;" th:text="${inv.productInventory}">10</span></td>
+                    <td>
+                        <a th:href="@{/frontend/stores/{id}(id=${inv.storeId})}" class="btn btn-outline btn-sm">Manage at Store</a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(inventoryList)}">
+                    <td colspan="5" style="text-align: center; color: #94a3b8; padding: 2rem;">No inventory found for this parameter.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

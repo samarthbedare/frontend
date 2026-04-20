@@ -11,6 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.beans.propertyeditors.CustomNumberEditor;
+
+import java.math.BigDecimal;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +34,11 @@ public class StoreInventoryFrontendController {
         this.inventoryServiceClient = inventoryServiceClient;
     }
 
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(BigDecimal.class, new CustomNumberEditor(BigDecimal.class, true));
+    }
+
     @GetMapping
     public String viewStores(HttpServletRequest request, Model model) {
         String token = SessionJwtUtil.getJwt(request);
@@ -43,6 +53,11 @@ public class StoreInventoryFrontendController {
             }
             return "stores/stores";
         }
+    }
+
+    @GetMapping({"/add", "/new"})
+    public String viewAddStorePage(HttpServletRequest request, Model model) {
+        return "stores/add-store";
     }
 
     @GetMapping("/search")
@@ -61,7 +76,7 @@ public class StoreInventoryFrontendController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public String viewStoreDetails(@PathVariable Long id, HttpServletRequest request, Model model, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
@@ -79,9 +94,29 @@ public class StoreInventoryFrontendController {
         }
     }
 
-    @PostMapping
-    public String createStore(@ModelAttribute Store store, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+    @GetMapping("/{id:\\d+}/edit")
+    public String viewEditStorePage(@PathVariable Long id, HttpServletRequest request, Model model, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
+        try {
+            Store store = storeServiceClient.getStoreById(id, token);
+            model.addAttribute("store", store);
+            return "stores/edit-store";
+        } catch (Exception e) {
+            if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
+                return "redirect:/login?reqLogin=true";
+            }
+            redirectAttrs.addFlashAttribute("error", "Store Not Found: " + e.getMessage());
+            return "redirect:/frontend/stores";
+        }
+    }
+
+    @PostMapping
+    public String createStore(@ModelAttribute Store store, BindingResult bindingResult, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+        String token = SessionJwtUtil.getJwt(request);
+        if (bindingResult.hasErrors()) {
+            redirectAttrs.addFlashAttribute("error", "Invalid input data provided.");
+            return "redirect:/frontend/stores/add";
+        }
         try {
             storeServiceClient.createStore(store, token);
             redirectAttrs.addFlashAttribute("successMessage", "Store created successfully.");
@@ -91,26 +126,31 @@ public class StoreInventoryFrontendController {
                 return "redirect:/login?reqLogin=true";
             }
             redirectAttrs.addFlashAttribute("error", "Failed to create store: " + e.getMessage());
-            return "redirect:/frontend/stores";
+            return "redirect:/frontend/stores/add";
         }
     }
 
-    @PostMapping("/{id}/update")
-    public String updateStore(@PathVariable Long id, @ModelAttribute Store store, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+    @PostMapping("/{id:\\d+}/update")
+    public String updateStore(@PathVariable Long id, @ModelAttribute Store store, BindingResult bindingResult, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
+        if (bindingResult.hasErrors()) {
+            redirectAttrs.addFlashAttribute("error", "Invalid input data provided.");
+            return "redirect:/frontend/stores/" + id + "/edit";
+        }
         try {
             storeServiceClient.updateStore(id, store, token);
             redirectAttrs.addFlashAttribute("successMessage", "Store updated successfully.");
+            return "redirect:/frontend/stores/" + id;
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
             }
             redirectAttrs.addFlashAttribute("error", "Failed to update store: " + e.getMessage());
+            return "redirect:/frontend/stores/" + id + "/edit";
         }
-        return "redirect:/frontend/stores/" + id;
     }
 
-    @PostMapping("/{id}/delete")
+    @PostMapping("/{id:\\d+}/delete")
     public String deleteStore(@PathVariable Long id, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
@@ -131,23 +171,44 @@ public class StoreInventoryFrontendController {
 
     // -- INVENTORY ACTIONS (Routed through store view typically) --
     
-    @PostMapping("/{storeId}/inventory")
-    public String addInventory(@PathVariable Integer storeId, @ModelAttribute Inventory inventory, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+    @GetMapping("/{id:\\d+}/inventory/add")
+    public String viewAddInventoryPage(@PathVariable Long id, HttpServletRequest request, Model model, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
+        try {
+            Store store = storeServiceClient.getStoreById(id, token);
+            model.addAttribute("store", store);
+            return "stores/add-inventory";
+        } catch (Exception e) {
+            if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
+                return "redirect:/login?reqLogin=true";
+            }
+            redirectAttrs.addFlashAttribute("error", "Store Not Found: " + e.getMessage());
+            return "redirect:/frontend/stores";
+        }
+    }
+
+    @PostMapping("/{storeId:\\d+}/inventory")
+    public String addInventory(@PathVariable Integer storeId, @ModelAttribute Inventory inventory, BindingResult bindingResult, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+        String token = SessionJwtUtil.getJwt(request);
+        if (bindingResult.hasErrors()) {
+            redirectAttrs.addFlashAttribute("error", "Invalid input data provided.");
+            return "redirect:/frontend/stores/" + storeId + "/inventory/add";
+        }
         try {
             inventory.setStoreId(storeId);
             inventoryServiceClient.addInventory(inventory, token);
             redirectAttrs.addFlashAttribute("successMessage", "Inventory initialized successfully.");
+            return "redirect:/frontend/stores/" + storeId;
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
             }
             redirectAttrs.addFlashAttribute("error", "Failed to add inventory: " + e.getMessage());
+            return "redirect:/frontend/stores/" + storeId + "/inventory/add";
         }
-        return "redirect:/frontend/stores/" + storeId;
     }
 
-    @PostMapping("/{storeId}/inventory/updateStock")
+    @PostMapping("/{storeId:\\d+}/inventory/updateStock")
     public String updateStock(@PathVariable Integer storeId, 
                               @RequestParam("productId") Integer productId, 
                               @RequestParam("quantity") Integer quantity, 
@@ -172,7 +233,7 @@ public class StoreInventoryFrontendController {
         return "redirect:/frontend/stores/" + storeId;
     }
 
-    @PostMapping("/{storeId}/inventory/delete")
+    @PostMapping("/{storeId:\\d+}/inventory/delete")
     public String deleteInventory(@PathVariable Long storeId, @RequestParam("productId") Long productId, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {

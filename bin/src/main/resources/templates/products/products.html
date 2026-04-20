@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Products Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+        }
+
+        .header-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #93c5fd, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .filter-form {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .filter-input {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-family: inherit;
+        }
+
+        .glass-table-wrapper {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.4);
+        }
+
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .styled-table thead tr {
+            background: rgba(15, 23, 42, 0.8);
+            color: #93c5fd;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .styled-table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        .styled-table tbody tr:hover {
+            background: rgba(59, 130, 246, 0.08);
+            transform: scale(1.002);
+        }
+
+        .val-badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-brand { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
+        .badge-size { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
+        
+        .price-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+            color: #fca5a5;
+        }
+
+        .action-flex {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            color: #cbd5e1;
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            border-color: #f1f5f9;
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+        }
+
+        .btn-sm {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.75rem;
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(239,68,68,0.3);
+        }
+        .btn-delete:hover {
+            background: rgba(239, 68, 68, 0.3);
+            color: white;
+        }
+
+        .error-banner {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+<div class="glow-orb"></div>
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <h1 class="header-title">Product Catalog (Validated)</h1>
+            <p style="color: #94a3b8; margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+                Manage your complete inventory directly mapped via APIs
+            </p>
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <a th:href="@{/frontend/products/new}" class="btn btn-primary">+ New Product</a>
+            <a th:href="@{/team}" class="btn btn-outline">&larr; Team</a>
+            <a th:href="@{/work/narayani}" class="btn btn-outline">Module Details</a>
+            <a th:href="@{/logout}" class="btn btn-outline" style="border-color: rgba(239,68,68,0.4); color: #fca5a5;">Logout Admin</a>
+        </div>
+    </div>
+    
+    <!-- Filter Bar -->
+    <form class="filter-form" th:action="@{/frontend/products}" method="get">
+        <span style="font-size: 0.85rem; font-weight: bold; color: #94a3b8; text-transform: uppercase;">Filters: </span>
+        <input type="text" name="name" th:value="${name}" placeholder="Name (e.g. Jacket)" class="filter-input" />
+        <input type="text" name="brand" th:value="${brand}" placeholder="Brand (e.g. Zara)" class="filter-input" />
+        <input type="text" name="colour" th:value="${colour}" placeholder="Colour (e.g. RED)" class="filter-input" />
+        <input type="text" name="size" th:value="${size}" placeholder="Size (e.g. XL)" class="filter-input" />
+        <button type="submit" class="btn btn-outline" style="background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.4); color: #93c5fd;">Apply Filter</button>
+        <a th:href="@{/frontend/products}" style="color: #64748b; font-size: 0.85rem; text-decoration: none; margin-left: 0.5rem;">Clear</a>
+    </form>
+
+    <form class="filter-form" style="margin-top: -1rem; background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.1);" th:action="@{/frontend/products/search}" method="get">
+        <span style="font-size: 0.85rem; font-weight: bold; color: #6ee7b7; text-transform: uppercase;">Direct Lookup: </span>
+        <input type="number" name="id" placeholder="Product ID (e.g. 1)" class="filter-input" required style="max-width: 150px;" />
+        <button type="submit" class="btn btn-outline" style="background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.4); color: #6ee7b7;">Find via ID</button>
+    </form>
+
+    <!-- Alert Banners -->
+    <div th:if="${error}" class="error-banner">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span th:text="${error}"></span>
+    </div>
+
+    <div th:if="${successMessage}" class="success-banner">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <span th:text="${successMessage}"></span>
+    </div>
+
+    <div class="glass-table-wrapper">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Ref ID</th>
+                    <th>Product Name</th>
+                    <th>Brand</th>
+                    <th>Colour</th>
+                    <th>Size</th>
+                    <th>Unit Price</th>
+                    <th>Rating</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="product : ${products}">
+                    <td style="font-family: 'JetBrains Mono', monospace; color: #94a3b8;" th:text="${product.productId}">1</td>
+                    <td style="font-weight: bold; color: #fff;" th:text="${product.productName}">T-Shirt</td>
+                    <td><span class="val-badge badge-brand" th:text="${product.brand}">Zara</span></td>
+                    <td>
+                        <span style="display: inline-flex; align-items: center; gap: 6px;">
+                            <span th:style="'display: inline-block; width: 12px; height: 12px; border-radius: 50%; opacity: 0.8; background-color: ' + ${product.colour != null ? (product.colour.toUpperCase() == 'BROWN' ? '#8B4513' : (product.colour.toUpperCase() == 'BLUE' ? '#3b82f6' : (product.colour.toUpperCase() == 'GREEN' ? '#10b981' : (product.colour.toUpperCase() == 'RED' ? '#ef4444' : (product.colour.toUpperCase() == 'BLACK' ? '#1e293b' : '#94a3b8'))))) : '#94a3b8'}"></span>
+                            <span th:text="${product.colour}">Red</span>
+                        </span>
+                    </td>
+                    <td><span class="val-badge badge-size" th:text="${product.size}">M</span></td>
+                    <td class="price-val" th:text="'$' + ${product.unitPrice}">$19.99</td>
+                    <td>
+                        <span style="color: #fbbf24;">★ </span>
+                        <span th:text="${product.rating}" style="font-weight: 600; color: #e2e8f0;">5.0</span>
+                    </td>
+                    <td class="action-flex">
+                        <a th:href="@{/frontend/products/{id}(id=${product.productId})}" class="btn btn-outline btn-sm">View</a>
+                        <a th:href="@{/frontend/products/{id}/edit(id=${product.productId})}" class="btn btn-outline btn-sm" style="color: #fcd34d; border-color: rgba(252,211,77,0.3);">Edit</a>
+                        <form th:action="@{/frontend/products/{id}/delete(id=${product.productId})}" method="post" onsubmit="return confirm('Delete this product permanently?');">
+                            <button type="submit" class="btn btn-delete btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(products)}">
+                    <td colspan="8" style="text-align: center; color: #94a3b8; padding: 3rem;">
+                        No products available matching your search criteria.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Stores Database</title>
+    <title>Orders Database</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
     <style>
         .dashboard-container { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem; animation: fadeUp 0.6s ease forwards; }
@@ -28,14 +28,6 @@
         .error-banner { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
         .success-banner { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #6ee7b7; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        /* Modal Styles */
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; auto; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
-        .modal-content { background: rgba(15, 23, 42, 0.9); margin: 10% auto; padding: 2rem; border: 1px solid rgba(139, 92, 246, 0.3); width: 50%; max-width: 500px; border-radius: 16px; position: relative; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
-        .close:hover { color: #fff; }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-label { display: block; margin-bottom: 0.5rem; color: #cbd5e1; font-size: 0.9rem; }
-        .form-control { width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: inherit; margin-bottom: 0.5rem; }
     </style>
 </head>
 <body>
@@ -43,25 +35,30 @@
 <div class="dashboard-container">
     <div class="dashboard-header">
         <div>
-            <h1 class="header-title">Store Management</h1>
-            <p style="color: #94a3b8; margin: 0.5rem 0 0 0; font-size: 0.9rem;">Manage store locations and inventory mapping.</p>
+            <h1 class="header-title">Order Management</h1>
+            <p style="color: #94a3b8; margin: 0.5rem 0 0 0; font-size: 0.9rem;">Monitor and administer active system orders</p>
         </div>
         <div style="display: flex; gap: 1rem;">
-            <a th:href="@{/frontend/stores/add}" class="btn btn-primary">+ New Store</a>
+            <a th:href="@{/frontend/orders/new}" class="btn btn-primary">+ New Order</a>
             <a th:href="@{/team}" class="btn btn-outline">&larr; Team</a>
         </div>
     </div>
     
     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-        <form class="filter-form" th:action="@{/frontend/stores/search}" method="get" style="flex: 1;">
-            <span style="font-size: 0.85rem; font-weight: bold; color: #a78bfa; text-transform: uppercase;">By Address: </span>
-            <input type="text" name="address" placeholder="Physical Address" class="filter-input" style="flex:1;" required/>
+        <form class="filter-form" th:action="@{/frontend/orders/search}" method="get" style="flex: 1;">
+            <span style="font-size: 0.85rem; font-weight: bold; color: #a78bfa; text-transform: uppercase;">By ID: </span>
+            <input type="number" name="id" placeholder="Order ID" class="filter-input" style="flex:1;" />
             <button type="submit" class="btn btn-outline">Find</button>
         </form>
-        <form class="filter-form" onsubmit="event.preventDefault(); window.location.href='/frontend/stores/' + document.getElementById('searchStoreId').value;" style="flex: 1;">
-            <span style="font-size: 0.85rem; font-weight: bold; color: #6ee7b7; text-transform: uppercase;">By ID: </span>
-            <input type="number" id="searchStoreId" placeholder="Store ID" class="filter-input" style="flex:1;" required min="1"/>
-            <button type="submit" class="btn btn-outline">Fetch Store</button>
+        <form class="filter-form" th:action="@{/frontend/orders/search}" method="get" style="flex: 1;">
+            <span style="font-size: 0.85rem; font-weight: bold; color: #6ee7b7; text-transform: uppercase;">By Customer ID: </span>
+            <input type="number" name="customerId" placeholder="Customer ID" class="filter-input" style="flex:1;" />
+            <button type="submit" class="btn btn-outline">Fetch</button>
+        </form>
+        <form class="filter-form" th:action="@{/frontend/orders/search}" method="get" style="flex: 1;">
+            <span style="font-size: 0.85rem; font-weight: bold; color: #fbbf24; text-transform: uppercase;">By Store ID: </span>
+            <input type="number" name="storeId" placeholder="Store ID" class="filter-input" style="flex:1;" />
+            <button type="submit" class="btn btn-outline">Fetch</button>
         </form>
     </div>
 
@@ -72,33 +69,34 @@
         <table class="styled-table">
             <thead>
                 <tr>
+                    <th>Order ID</th>
+                    <th>Date/Time</th>
+                    <th>Customer ID</th>
+                    <th>Status</th>
                     <th>Store ID</th>
-                    <th>Name</th>
-                    <th>Web Address</th>
-                    <th>Physical Address</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="store : ${stores}">
-                    <td style="font-family: 'JetBrains Mono', monospace; color: #94a3b8;" th:text="${store.storeId}">1</td>
-                    <td th:text="${store.storeName}">Name</td>
-                    <td><a th:href="${store.webAddress}" th:text="${store.webAddress}" style="color: #c4b5fd; text-decoration: none;" target="_blank">URL</a></td>
-                    <td th:text="${store.physicalAddress}">Address</td>
+                <tr th:each="order : ${orders}">
+                    <td style="font-family: 'JetBrains Mono', monospace; color: #94a3b8;" th:text="${order.orderId}">1</td>
+                    <td th:text="${order.orderTms != null ? order.orderTms : 'Not recorded'}">Time</td>
+                    <td th:text="${order.customerId}">1</td>
+                    <td><span class="val-badge badge-status" th:text="${order.orderStatus}">STATUS</span></td>
+                    <td th:text="${order.storeId}">1</td>
                     <td class="action-flex">
-                        <a th:href="@{/frontend/stores/{id}(id=${store.storeId})}" class="btn btn-outline btn-sm">View</a>
-                        <form th:action="@{/frontend/stores/{id}/delete(id=${store.storeId})}" method="post" onsubmit="return confirm('Delete this store permanently?');">
+                        <a th:href="@{/frontend/orders/{id}(id=${order.orderId})}" class="btn btn-outline btn-sm">View</a>
+                        <form th:action="@{/frontend/orders/{id}/delete(id=${order.orderId})}" method="post" onsubmit="return confirm('Delete this order completely?');">
                             <button type="submit" class="btn btn-delete btn-sm">Delete</button>
                         </form>
                     </td>
                 </tr>
-                <tr th:if="${#lists.isEmpty(stores)}">
-                    <td colspan="5" style="text-align: center; color: #94a3b8; padding: 2rem;">No stores matched the requested criteria.</td>
+                <tr th:if="${#lists.isEmpty(orders)}">
+                    <td colspan="6" style="text-align: center; color: #94a3b8; padding: 2rem;">No orders matched the requested criteria.</td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
-
 </body>
 </html>
