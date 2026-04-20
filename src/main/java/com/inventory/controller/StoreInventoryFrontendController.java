@@ -2,7 +2,8 @@ package com.inventory.controller;
 
 import com.inventory.model.Inventory;
 import com.inventory.model.Store;
-import com.inventory.service.BackendHttpClient;
+import com.inventory.service.InventoryServiceClient;
+import com.inventory.service.StoreServiceClient;
 import com.inventory.util.SessionJwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +20,28 @@ import java.util.Map;
 @RequestMapping("/frontend/stores")
 public class StoreInventoryFrontendController {
 
-    private final BackendHttpClient backendHttpClient;
+    private final StoreServiceClient storeServiceClient;
+    private final InventoryServiceClient inventoryServiceClient;
 
     @Autowired
-    public StoreInventoryFrontendController(BackendHttpClient backendHttpClient) {
-        this.backendHttpClient = backendHttpClient;
+    public StoreInventoryFrontendController(StoreServiceClient storeServiceClient, InventoryServiceClient inventoryServiceClient) {
+        this.storeServiceClient = storeServiceClient;
+        this.inventoryServiceClient = inventoryServiceClient;
     }
 
     @GetMapping
     public String viewStores(HttpServletRequest request, Model model) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            List<Store> stores = backendHttpClient.getAllStores(token);
+            List<Store> stores = storeServiceClient.getAllStores(token);
             model.addAttribute("stores", stores);
-            return "stores";
+            return "stores/stores";
         } catch (Exception e) {
+            model.addAttribute("error", "Failed to fetch stores: " + e.getMessage());
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
             }
-            model.addAttribute("error", "Failed to fetch stores: " + e.getMessage());
-            return "stores";
+            return "stores/stores";
         }
     }
 
@@ -46,15 +49,15 @@ public class StoreInventoryFrontendController {
     public String searchStoreByAddress(@RequestParam(value = "address") String address, HttpServletRequest request, Model model) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            List<Store> stores = backendHttpClient.searchStoresByAddress(address, token);
+            List<Store> stores = storeServiceClient.searchStoresByAddress(address, token);
             model.addAttribute("stores", stores);
-            return "stores";
+            return "stores/stores";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
             }
             model.addAttribute("error", "Failed to search stores: " + e.getMessage());
-            return "stores";
+            return "stores/stores";
         }
     }
 
@@ -62,11 +65,11 @@ public class StoreInventoryFrontendController {
     public String viewStoreDetails(@PathVariable Long id, HttpServletRequest request, Model model, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            Store store = backendHttpClient.getStoreById(id, token);
-            List<Inventory> inventoryList = backendHttpClient.getInventoryByStoreId(id, token);
+            Store store = storeServiceClient.getStoreById(id, token);
+            List<Inventory> inventoryList = inventoryServiceClient.getInventoryByStoreId(id, token);
             model.addAttribute("store", store);
             model.addAttribute("inventoryList", inventoryList);
-            return "store-details";
+            return "stores/store-details";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
@@ -80,7 +83,7 @@ public class StoreInventoryFrontendController {
     public String createStore(@ModelAttribute Store store, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            backendHttpClient.createStore(store, token);
+            storeServiceClient.createStore(store, token);
             redirectAttrs.addFlashAttribute("successMessage", "Store created successfully.");
             return "redirect:/frontend/stores";
         } catch (Exception e) {
@@ -96,7 +99,7 @@ public class StoreInventoryFrontendController {
     public String updateStore(@PathVariable Long id, @ModelAttribute Store store, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            backendHttpClient.updateStore(id, store, token);
+            storeServiceClient.updateStore(id, store, token);
             redirectAttrs.addFlashAttribute("successMessage", "Store updated successfully.");
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
@@ -111,7 +114,7 @@ public class StoreInventoryFrontendController {
     public String deleteStore(@PathVariable Long id, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            backendHttpClient.deleteStore(id, token);
+            storeServiceClient.deleteStore(id, token);
             redirectAttrs.addFlashAttribute("successMessage", "Store deleted securely.");
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
@@ -133,7 +136,7 @@ public class StoreInventoryFrontendController {
         String token = SessionJwtUtil.getJwt(request);
         try {
             inventory.setStoreId(storeId);
-            backendHttpClient.addInventory(inventory, token);
+            inventoryServiceClient.addInventory(inventory, token);
             redirectAttrs.addFlashAttribute("successMessage", "Inventory initialized successfully.");
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
@@ -158,7 +161,7 @@ public class StoreInventoryFrontendController {
             payload.put("quantity", quantity);
             boolean isAdd = "add".equalsIgnoreCase(action);
             
-            backendHttpClient.updateStock(payload, isAdd, token);
+            inventoryServiceClient.updateStock(payload, isAdd, token);
             redirectAttrs.addFlashAttribute("successMessage", "Stock updated successfully.");
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
@@ -173,7 +176,7 @@ public class StoreInventoryFrontendController {
     public String deleteInventory(@PathVariable Long storeId, @RequestParam("productId") Long productId, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            backendHttpClient.deleteInventory(storeId, productId, token);
+            inventoryServiceClient.deleteInventory(storeId, productId, token);
             redirectAttrs.addFlashAttribute("successMessage", "Inventory item removed securely.");
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {

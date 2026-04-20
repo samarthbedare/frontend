@@ -1,7 +1,7 @@
 package com.inventory.controller;
 
 import com.inventory.model.Product;
-import com.inventory.service.BackendHttpClient;
+import com.inventory.service.ProductServiceClient;
 import com.inventory.util.SessionJwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,11 @@ import java.util.List;
 @RequestMapping("/frontend/products")
 public class ProductFrontendController {
 
-    private final BackendHttpClient backendHttpClient;
+    private final ProductServiceClient productServiceClient;
 
     @Autowired
-    public ProductFrontendController(BackendHttpClient backendHttpClient) {
-        this.backendHttpClient = backendHttpClient;
+    public ProductFrontendController(ProductServiceClient productServiceClient) {
+        this.productServiceClient = productServiceClient;
     }
 
     @GetMapping
@@ -33,76 +33,89 @@ public class ProductFrontendController {
         String token = SessionJwtUtil.getJwt(request);
 
         try {
-            List<Product> products = backendHttpClient.getAllProducts(token, name, brand, colour, size);
+            List<Product> products = productServiceClient.getAllProducts(token, name, brand, colour, size);
             model.addAttribute("products", products);
             model.addAttribute("name", name);
             model.addAttribute("brand", brand);
             model.addAttribute("colour", colour);
             model.addAttribute("size", size);
-            return "products";
+            return "products/products";
         } catch (Exception e) {
             model.addAttribute("error", "Failed to fetch products: " + e.getMessage());
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
             }
-            return "products";
+            return "products/products";
         }
     }
 
     @GetMapping("/search")
-    public String searchById(@org.springframework.web.bind.annotation.RequestParam("id") Long id) {
-        return "redirect:/frontend/products/" + id;
+    public String searchById(@org.springframework.web.bind.annotation.RequestParam("id") Long id, HttpServletRequest request, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttrs) {
+        String token = SessionJwtUtil.getJwt(request);
+        try {
+            productServiceClient.getProductById(id, token);
+            return "redirect:/frontend/products/" + id;
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            redirectAttrs.addFlashAttribute("error", msg);
+            return "redirect:/frontend/products";
+        }
     }
 
     @GetMapping("/{id}")
-    public String viewProductDetails(@org.springframework.web.bind.annotation.PathVariable Long id, HttpServletRequest request, Model model) {
+    public String viewProductDetails(@org.springframework.web.bind.annotation.PathVariable Long id, HttpServletRequest request, Model model, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            Product product = backendHttpClient.getProductById(id, token);
+            Product product = productServiceClient.getProductById(id, token);
             model.addAttribute("product", product);
-            return "product-details";
+            return "products/product-details";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
             }
-            return "redirect:/frontend/products";
+            redirectAttrs.addFlashAttribute("error", "Product Not Found: " + e.getMessage());
+            String referer = request.getHeader("referer");
+            return "redirect:" + (referer != null ? referer : "/frontend/products");
         }
     }
 
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("product", new Product());
-        return "product-form";
+        return "products/product-form";
     }
 
     @org.springframework.web.bind.annotation.PostMapping
     public String createProduct(@org.springframework.web.bind.annotation.ModelAttribute Product product, HttpServletRequest request, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            backendHttpClient.createProduct(product, token);
+            productServiceClient.createProduct(product, token);
             redirectAttrs.addFlashAttribute("successMessage", "Product created successfully.");
             return "redirect:/frontend/products";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
             }
-            return "redirect:/frontend/products/new?error=true";
+            redirectAttrs.addFlashAttribute("error", "Create failed: " + e.getMessage());
+            return "redirect:/frontend/products/new";
         }
     }
 
     @GetMapping("/{id}/edit")
-    public String showEditForm(@org.springframework.web.bind.annotation.PathVariable Long id, HttpServletRequest request, Model model) {
+    public String showEditForm(@org.springframework.web.bind.annotation.PathVariable Long id, HttpServletRequest request, Model model, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            Product product = backendHttpClient.getProductById(id, token);
+            Product product = productServiceClient.getProductById(id, token);
             model.addAttribute("product", product);
             model.addAttribute("isEdit", true);
-            return "product-form";
+            return "products/product-form";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
             }
-            return "redirect:/frontend/products";
+            redirectAttrs.addFlashAttribute("error", "Product Not Found: " + e.getMessage());
+            String referer = request.getHeader("referer");
+            return "redirect:" + (referer != null ? referer : "/frontend/products");
         }
     }
 
@@ -122,7 +135,7 @@ public class ProductFrontendController {
             updates.put("unitPrice", product.getUnitPrice());
             updates.put("rating", product.getRating());
 
-            backendHttpClient.updateProduct(id, updates, token);
+            productServiceClient.updateProduct(id, updates, token);
             redirectAttrs.addFlashAttribute("successMessage", "Product patched successfully.");
             return "redirect:/frontend/products";
         } catch (Exception e) {
@@ -141,14 +154,15 @@ public class ProductFrontendController {
             org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            backendHttpClient.deleteProduct(id, token);
+            productServiceClient.deleteProduct(id, token);
             redirectAttrs.addFlashAttribute("successMessage", "Product removed successfully.");
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
             }
-            redirectAttrs.addFlashAttribute("error", "Failed to delete product. " + e.getMessage());
+            redirectAttrs.addFlashAttribute("error", "Product Not Found: " + e.getMessage());
         }
-        return "redirect:/frontend/products";
+        String referer = request.getHeader("referer");
+        return "redirect:" + (referer != null ? referer : "/frontend/products");
     }
 }

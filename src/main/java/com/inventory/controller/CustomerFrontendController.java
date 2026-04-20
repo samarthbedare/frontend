@@ -1,7 +1,7 @@
 package com.inventory.controller;
 
 import com.inventory.model.Customer;
-import com.inventory.service.BackendHttpClient;
+import com.inventory.service.CustomerServiceClient;
 import com.inventory.util.SessionJwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,26 +17,26 @@ import java.util.List;
 @RequestMapping("/frontend/customers")
 public class CustomerFrontendController {
 
-    private final BackendHttpClient backendHttpClient;
+    private final CustomerServiceClient customerServiceClient;
 
     @Autowired
-    public CustomerFrontendController(BackendHttpClient backendHttpClient) {
-        this.backendHttpClient = backendHttpClient;
+    public CustomerFrontendController(CustomerServiceClient customerServiceClient) {
+        this.customerServiceClient = customerServiceClient;
     }
 
     @GetMapping
     public String viewCustomers(HttpServletRequest request, Model model) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            List<Customer> customers = backendHttpClient.getAllCustomers(token);
+            List<Customer> customers = customerServiceClient.getAllCustomers(token);
             model.addAttribute("customers", customers);
-            return "customers";
+            return "customers/customers";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
             }
             model.addAttribute("error", "Failed to fetch customers: " + e.getMessage());
-            return "customers";
+            return "customers/customers";
         }
     }
 
@@ -56,9 +56,9 @@ public class CustomerFrontendController {
     public String viewCustomerDetails(@PathVariable Long id, HttpServletRequest request, Model model, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            Customer customer = backendHttpClient.getCustomerById(id, token);
+            Customer customer = customerServiceClient.getCustomerById(id, token);
             model.addAttribute("customer", customer);
-            return "customer-details";
+            return "customers/customer-details";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
@@ -72,10 +72,10 @@ public class CustomerFrontendController {
     public String viewCustomerByEmail(@PathVariable String email, HttpServletRequest request, Model model, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            Customer customer = backendHttpClient.getCustomerByEmail(email, token);
+            Customer customer = customerServiceClient.getCustomerByEmail(email, token);
             model.addAttribute("customer", customer);
             // Reusing details view
-            return "customer-details";
+            return "customers/customer-details";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
@@ -89,7 +89,7 @@ public class CustomerFrontendController {
     public String validateCustomer(@RequestParam("id") Long id, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            boolean isValid = backendHttpClient.validateCustomer(id, token);
+            boolean isValid = customerServiceClient.validateCustomer(id, token);
             if (isValid) {
                 redirectAttrs.addFlashAttribute("successMessage", "Validation Passed: Customer ID " + id + " exists.");
             } else {
@@ -107,14 +107,14 @@ public class CustomerFrontendController {
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("customer", new Customer());
-        return "customer-form";
+        return "customers/customer-form";
     }
 
     @PostMapping
     public String createCustomer(@ModelAttribute Customer customer, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            backendHttpClient.createCustomer(customer, token);
+            customerServiceClient.createCustomer(customer, token);
             redirectAttrs.addFlashAttribute("successMessage", "Customer profile created successfully.");
             return "redirect:/frontend/customers";
         } catch (Exception e) {
@@ -130,10 +130,10 @@ public class CustomerFrontendController {
     public String showEditForm(@PathVariable Long id, HttpServletRequest request, Model model, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            Customer customer = backendHttpClient.getCustomerById(id, token);
+            Customer customer = customerServiceClient.getCustomerById(id, token);
             model.addAttribute("customer", customer);
             model.addAttribute("isEdit", true);
-            return "customer-form";
+            return "customers/customer-form";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
@@ -147,7 +147,7 @@ public class CustomerFrontendController {
     public String updateCustomer(@PathVariable Long id, @ModelAttribute Customer customer, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            backendHttpClient.updateCustomer(id, customer, token);
+            customerServiceClient.updateCustomer(id, customer, token);
             redirectAttrs.addFlashAttribute("successMessage", "Customer profile updated flawlessly.");
             return "redirect:/frontend/customers";
         } catch (Exception e) {
@@ -163,7 +163,7 @@ public class CustomerFrontendController {
     public String deleteCustomer(@PathVariable Long id, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            backendHttpClient.deleteCustomer(id, token);
+            customerServiceClient.deleteCustomer(id, token);
             redirectAttrs.addFlashAttribute("successMessage", "Customer record safely erased.");
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {

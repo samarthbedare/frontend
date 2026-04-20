@@ -25,7 +25,7 @@ public class TeamController {
                             "PUT /api/v1/customers/{id}", "DELETE /api/v1/customers/{id}",
                             "GET /api/v1/customers/validate/{id}")),
 
-            new Member(2, "Narayani Gupta", "Product Service", "narayani", "NG", "/img/narayani.png",
+            new Member(2, "Narayani Gupta", "Product Service", "narayani", "NG", "/img/narayani.jpeg",
                     "Expert in robust catalog management systems, focusing on performance-optimized product filtering and advanced attribute tracking.",
                     Arrays.asList("Developed product filtering by brand and size",
                             "Created robust catalog management system",
@@ -34,7 +34,7 @@ public class TeamController {
                     Arrays.asList("GET /api/v1/products", "GET /api/v1/products/{id}", "POST /api/v1/products",
                             "PATCH /api/v1/products/{id}", "DELETE /api/v1/products/{id}")),
 
-            new Member(3, "Samarth Bedare", "Order Service", "samarth", "SB", "/img/samarth.jpeg",
+            new Member(3, "Samarth Bedare", "Order Service", "samarth", "SB", "/img/samarth.png",
                     "Coordinates the transition of items from inventory to customer ownership, managing the entire complex order lifecycle.",
                     Arrays.asList("Designed Atomic Checkout logic", "Managed complex order status transitions",
                             "Implemented historical order retrieval"),
@@ -43,7 +43,7 @@ public class TeamController {
                             "GET /api/v1/orders/store/{sid}", "POST /api/v1/orders", "PATCH /api/v1/orders/{id}/status",
                             "PATCH /api/v1/orders/{id}/shipment", "DELETE /api/v1/orders/{id}")),
 
-            new Member(4, "Priya Chavan", "Store & Inventory Service", "priya", "PC", "/img/priya.jpg",
+            new Member(4, "Priya Chavan", "Store & Inventory Service", "priya", "PC", "/img/priya.jpeg",
                     "Orchestrates stock levels across multiple physical locations, supporting atomic stock operations during the fulfillment process.",
                     Arrays.asList("Implemented multi-store inventory tracking",
                             "Atomic stock reduction during checkout", "Developed Replenishment logic"),
@@ -54,7 +54,7 @@ public class TeamController {
                             "POST /api/v1/inventory", "PATCH /api/v1/inventory/add", "PATCH /api/v1/inventory/reduce",
                             "DELETE /api/v1/inventory/store/{sid}/product/{pid}")),
 
-            new Member(5, "Rohan Kumbhar", "Shipping Service", "rohan", "RK", "/img/rohan.png",
+            new Member(5, "Rohan Kumbhar", "Shipping Service", "rohan", "RK", "/img/rohan.jpeg",
                     "Tracks the logistics component of orders, providing real-time status updates from creation to final delivery.",
                     Arrays.asList("Implemented real-time shipment tracking", "Designed delivery status update logic",
                             "Integrated shipment logistics with order system"),

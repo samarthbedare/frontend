@@ -1,7 +1,7 @@
 package com.inventory.controller;
 
 import com.inventory.model.Inventory;
-import com.inventory.service.BackendHttpClient;
+import com.inventory.service.InventoryServiceClient;
 import com.inventory.util.SessionJwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +17,11 @@ import java.util.List;
 @RequestMapping("/frontend/inventory")
 public class InventoryFrontendController {
 
-    private final BackendHttpClient backendHttpClient;
+    private final InventoryServiceClient inventoryServiceClient;
 
     @Autowired
-    public InventoryFrontendController(BackendHttpClient backendHttpClient) {
-        this.backendHttpClient = backendHttpClient;
+    public InventoryFrontendController(InventoryServiceClient inventoryServiceClient) {
+        this.inventoryServiceClient = inventoryServiceClient;
     }
 
     @GetMapping
@@ -31,22 +31,22 @@ public class InventoryFrontendController {
         String token = SessionJwtUtil.getJwt(request);
         try {
             if (productId != null) {
-                List<Inventory> inventoryList = backendHttpClient.getInventoryByProductId(productId, token);
+                List<Inventory> inventoryList = inventoryServiceClient.getInventoryByProductId(productId, token);
                 model.addAttribute("inventoryList", inventoryList);
             } else if (storeId != null) {
-                List<Inventory> inventoryList = backendHttpClient.getInventoryByStoreId(storeId, token);
+                List<Inventory> inventoryList = inventoryServiceClient.getInventoryByStoreId(storeId, token);
                 model.addAttribute("inventoryList", inventoryList);
             } else {
-                List<Inventory> inventoryList = backendHttpClient.getAllInventory(token);
+                List<Inventory> inventoryList = inventoryServiceClient.getAllInventory(token);
                 model.addAttribute("inventoryList", inventoryList);
             }
-            return "inventory";
+            return "inventory/inventory";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
             }
             model.addAttribute("error", "Failed to fetch inventory: " + e.getMessage());
-            return "inventory";
+            return "inventory/inventory";
         }
     }
 }

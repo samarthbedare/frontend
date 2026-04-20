@@ -1,7 +1,7 @@
 package com.inventory.controller;
 
 import com.inventory.model.Shipment;
-import com.inventory.service.BackendHttpClient;
+import com.inventory.service.ShippingServiceClient;
 import com.inventory.util.SessionJwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -15,10 +15,10 @@ import java.util.List;
 @RequestMapping("/frontend/shipments")
 public class ShippingFrontendController {
 
-    private final BackendHttpClient backendHttpClient;
+    private final ShippingServiceClient shippingServiceClient;
 
-    public ShippingFrontendController(BackendHttpClient backendHttpClient) {
-        this.backendHttpClient = backendHttpClient;
+    public ShippingFrontendController(ShippingServiceClient shippingServiceClient) {
+        this.shippingServiceClient = shippingServiceClient;
     }
 
     @GetMapping
@@ -28,25 +28,25 @@ public class ShippingFrontendController {
         String token = SessionJwtUtil.getJwt(request);
         try {
             if (customerId != null) {
-                List<Shipment> shipments = backendHttpClient.getShipmentsByCustomer(customerId, token);
+                List<Shipment> shipments = shippingServiceClient.getShipmentsByCustomer(customerId, token);
                 model.addAttribute("shipments", shipments);
                 model.addAttribute("filterContext", "Customer ID: " + customerId);
             } else if (storeId != null) {
-                List<Shipment> shipments = backendHttpClient.getShipmentsByStore(storeId, token);
+                List<Shipment> shipments = shippingServiceClient.getShipmentsByStore(storeId, token);
                 model.addAttribute("shipments", shipments);
                 model.addAttribute("filterContext", "Store ID: " + storeId);
             } else {
-                List<Shipment> shipments = backendHttpClient.getAllShipments(token);
+                List<Shipment> shipments = shippingServiceClient.getAllShipments(token);
                 model.addAttribute("shipments", shipments);
                 model.addAttribute("filterContext", "All Shipments"); // default message
             }
-            return "shipments";
+            return "shipments/shipments";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
             }
             model.addAttribute("error", "Failed to fetch shipments: " + e.getMessage());
-            return "shipments";
+            return "shipments/shipments";
         }
     }
 
@@ -54,7 +54,7 @@ public class ShippingFrontendController {
     public String createShipment(@ModelAttribute Shipment shipment, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            backendHttpClient.createShipment(shipment, token);
+            shippingServiceClient.createShipment(shipment, token);
             redirectAttrs.addFlashAttribute("successMessage", "Shipment successfully registered.");
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
@@ -69,9 +69,9 @@ public class ShippingFrontendController {
     public String viewShipmentDetails(@PathVariable Long id, HttpServletRequest request, Model model, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            Shipment shipment = backendHttpClient.getShipmentById(id, token);
+            Shipment shipment = shippingServiceClient.getShipmentById(id, token);
             model.addAttribute("shipment", shipment);
-            return "shipment-details";
+            return "shipments/shipment-details";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
                 return "redirect:/login?reqLogin=true";
@@ -85,7 +85,7 @@ public class ShippingFrontendController {
     public String updateShipmentStatus(@PathVariable Long id, @RequestParam("status") String status, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            backendHttpClient.updateShipmentStatus(id, status, token);
+            shippingServiceClient.updateShipmentStatus(id, status, token);
             redirectAttrs.addFlashAttribute("successMessage", "Status successfully updated to " + status + ".");
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
@@ -100,7 +100,7 @@ public class ShippingFrontendController {
     public String deleteShipment(@PathVariable Long id, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            backendHttpClient.deleteShipment(id, token);
+            shippingServiceClient.deleteShipment(id, token);
             redirectAttrs.addFlashAttribute("successMessage", "Shipment " + id + " permanently deleted.");
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
