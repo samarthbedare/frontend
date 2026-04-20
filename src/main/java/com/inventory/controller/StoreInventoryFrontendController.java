@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.validation.BindingResult;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +62,19 @@ public class StoreInventoryFrontendController {
         }
     }
 
+    @GetMapping("/new")
+    public String newStoreForm(Model model) {
+        if (!model.containsAttribute("store")) {
+            model.addAttribute("store", new Store());
+        }
+        return "stores/store-form";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String editStoreRedirect(@PathVariable Long id) {
+        return "redirect:/frontend/stores/" + id;
+    }
+
     @GetMapping("/{id}")
     public String viewStoreDetails(@PathVariable Long id, HttpServletRequest request, Model model, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
@@ -80,7 +94,12 @@ public class StoreInventoryFrontendController {
     }
 
     @PostMapping
-    public String createStore(@ModelAttribute Store store, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+    public String createStore(@ModelAttribute Store store, BindingResult bindingResult, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+        if (bindingResult.hasErrors()) {
+            redirectAttrs.addFlashAttribute("error", "Invalid store data provided. Please check numeric fields.");
+            redirectAttrs.addFlashAttribute("store", store);
+            return "redirect:/frontend/stores/new";
+        }
         String token = SessionJwtUtil.getJwt(request);
         try {
             storeServiceClient.createStore(store, token);
@@ -91,12 +110,17 @@ public class StoreInventoryFrontendController {
                 return "redirect:/login?reqLogin=true";
             }
             redirectAttrs.addFlashAttribute("error", "Failed to create store: " + e.getMessage());
-            return "redirect:/frontend/stores";
+            redirectAttrs.addFlashAttribute("store", store);
+            return "redirect:/frontend/stores/new";
         }
     }
 
     @PostMapping("/{id}/update")
-    public String updateStore(@PathVariable Long id, @ModelAttribute Store store, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+    public String updateStore(@PathVariable Long id, @ModelAttribute Store store, BindingResult bindingResult, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+        if (bindingResult.hasErrors()) {
+            redirectAttrs.addFlashAttribute("error", "Invalid store data provided for update. Please check numeric fields.");
+            return "redirect:/frontend/stores/" + id;
+        }
         String token = SessionJwtUtil.getJwt(request);
         try {
             storeServiceClient.updateStore(id, store, token);
@@ -132,7 +156,11 @@ public class StoreInventoryFrontendController {
     // -- INVENTORY ACTIONS (Routed through store view typically) --
     
     @PostMapping("/{storeId}/inventory")
-    public String addInventory(@PathVariable Integer storeId, @ModelAttribute Inventory inventory, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+    public String addInventory(@PathVariable Integer storeId, @ModelAttribute Inventory inventory, BindingResult bindingResult, HttpServletRequest request, RedirectAttributes redirectAttrs) {
+        if (bindingResult.hasErrors()) {
+            redirectAttrs.addFlashAttribute("error", "Invalid inventory data provided.");
+            return "redirect:/frontend/stores/" + storeId;
+        }
         String token = SessionJwtUtil.getJwt(request);
         try {
             inventory.setStoreId(storeId);

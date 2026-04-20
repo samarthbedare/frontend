@@ -22,7 +22,7 @@
 <body>
 <div class="dashboard-container">
     <div class="dashboard-header">
-       <h1 class="header-title">Checkout Configuration</h1>
+       <h1 class="header-title">Create Order</h1>
        <a th:href="@{/frontend/orders}" class="btn btn-outline">&larr; Cancel</a>
     </div>
 
@@ -30,20 +30,20 @@
 
     <form th:action="@{/frontend/orders}" method="post" class="filter-form">
         <div>
-            <label style="display:block; color: #a78bfa; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase;">Customer Reference ID</label>
+            <label style="display:block; color: #a78bfa; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase;">Customer ID</label>
             <input type="number" name="customerId" required class="filter-input" style="width: 100%; box-sizing: border-box;" />
         </div>
         <div>
-            <label style="display:block; color: #a78bfa; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase;">Fulfillment Store Node ID</label>
+            <label style="display:block; color: #a78bfa; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase;">Store ID</label>
             <input type="number" name="storeId" required class="filter-input" style="width: 100%; box-sizing: border-box;" />
         </div>
         <div>
-            <label style="display:block; color: #a78bfa; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase;">Delivery Address (If Applicable)</label>
-            <input type="text" name="deliveryAddress" class="filter-input" style="width: 100%; box-sizing: border-box;" placeholder="123 App St..." />
+            <label style="display:block; color: #a78bfa; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase;">Delivery Address</label>
+            <input type="text" name="deliveryAddress" required class="filter-input" style="width: 100%; box-sizing: border-box;" placeholder="123 App St..." />
         </div>
         
         <div style="background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
-            <p style="color: #6ee7b7; font-weight: bold; margin-top: 0; text-transform: uppercase; font-size: 0.85rem;">Line Item Insertion</p>
+            <p style="color: #6ee7b7; font-weight: bold; margin-top: 0; text-transform: uppercase; font-size: 0.85rem;">Add Item</p>
             <div style="display: flex; gap: 0.5rem;">
                 <div style="flex:1">
                     <label style="font-size: 0.75rem; color:#94a3b8; display:block;">Product ID</label>
@@ -61,7 +61,7 @@
             <!-- More items could be added logically via JavaScript if dynamic addition was supported here, simple static representation for now. -->
         </div>
 
-        <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Complete Secure Checkout</button>
+        <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Create Order</button>
     </form>
 </div>
 </body>
