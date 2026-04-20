@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -50,32 +52,32 @@ public class ProductFrontendController {
     }
 
     @GetMapping("/search")
-    public String searchById(@org.springframework.web.bind.annotation.RequestParam("id") Long id, HttpServletRequest request, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttrs) {
-        String token = SessionJwtUtil.getJwt(request);
-        try {
-            productServiceClient.getProductById(id, token);
+    public String searchById(@org.springframework.web.bind.annotation.RequestParam(value = "id", required = false) Long id) {
+        if (id != null) {
             return "redirect:/frontend/products/" + id;
-        } catch (Exception e) {
-            String msg = e.getMessage();
-            redirectAttrs.addFlashAttribute("error", msg);
-            return "redirect:/frontend/products";
         }
+        return "redirect:/frontend/products";
     }
 
     @GetMapping("/{id}")
-    public String viewProductDetails(@org.springframework.web.bind.annotation.PathVariable Long id, HttpServletRequest request, Model model, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttrs) {
+    public String getProductById(@PathVariable Long id,
+                                HttpServletRequest request,
+                                Model model,
+                                RedirectAttributes redirectAttrs) {
+
         String token = SessionJwtUtil.getJwt(request);
+
         try {
             Product product = productServiceClient.getProductById(id, token);
             model.addAttribute("product", product);
             return "products/product-details";
+
         } catch (Exception e) {
-            if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
-                return "redirect:/login?reqLogin=true";
-            }
-            redirectAttrs.addFlashAttribute("error", "Product Not Found: " + e.getMessage());
-            String referer = request.getHeader("referer");
-            return "redirect:" + (referer != null ? referer : "/frontend/products");
+
+            redirectAttrs.addFlashAttribute("error",
+                    "Product Not Found: Product not found with id: " + id);
+
+            return "redirect:/frontend/products";
         }
     }
 
@@ -114,8 +116,7 @@ public class ProductFrontendController {
                 return "redirect:/login?reqLogin=true";
             }
             redirectAttrs.addFlashAttribute("error", "Product Not Found: " + e.getMessage());
-            String referer = request.getHeader("referer");
-            return "redirect:" + (referer != null ? referer : "/frontend/products");
+            return "redirect:/frontend/products";
         }
     }
 
@@ -162,7 +163,6 @@ public class ProductFrontendController {
             }
             redirectAttrs.addFlashAttribute("error", "Product Not Found: " + e.getMessage());
         }
-        String referer = request.getHeader("referer");
-        return "redirect:" + (referer != null ? referer : "/frontend/products");
+        return "redirect:/frontend/products";
     }
 }
