@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Register New Shipment</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <style>
+        .form-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 3rem 1rem;
+        }
+
+        .form-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        .form-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c4b5fd, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .form-subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 2.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            color: #c4b5fd;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.9rem 1rem;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .form-input::placeholder { color: #475569; }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 1rem;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            color: #fff;
+            box-shadow: 0 10px 20px -10px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid rgba(148, 163, 184, 0.4);
+            color: #cbd5e1;
+            flex: 0.6;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            border-color: #f1f5f9;
+        }
+
+        .error-banner {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .success-banner {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+<div class="glow-orb" style="background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%);"></div>
+
+<div class="form-wrapper">
+    <div class="form-card">
+
+        <h1 class="form-title">Log New Shipment</h1>
+        <p class="form-subtitle">Register a new shipment into the logistics network</p>
+
+        <!-- Feedback banners -->
+        <div th:if="${error}" class="error-banner" th:text="${error}"></div>
+        <div th:if="${successMessage}" class="success-banner" th:text="${successMessage}"></div>
+
+        <!-- Form POSTs to /frontend/shipments/add — stays on this page after submit -->
+        <form th:action="@{/frontend/shipments/add}" th:object="${shipment}" method="post">
+
+            <div class="form-group">
+                <label class="form-label">Customer ID</label>
+                <input class="form-input" type="number" th:field="*{customerId}"
+                       required min="1" placeholder="e.g. 101"/>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Store ID (Fulfillment Origin)</label>
+                <input class="form-input" type="number" th:field="*{storeId}"
+                       required min="1" placeholder="e.g. 5"/>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Delivery Address</label>
+                <input class="form-input" type="text" th:field="*{deliveryAddress}"
+                       required placeholder="e.g. 42 Koregaon Park, Pune 411001"/>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/frontend/shipments}" class="btn btn-cancel">&larr; Back</a>
+                <button type="submit" class="btn btn-submit">Process Registration</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+</body>
+</html>
