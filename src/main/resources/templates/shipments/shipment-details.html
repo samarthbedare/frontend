@@ -50,9 +50,9 @@
             </p>
         </div>
         <div style="display: flex; gap: 1rem;">
-            <form th:action="@{/frontend/shipments/{id}/delete(id=${shipment.shipmentId})}" method="post" onsubmit="return confirm('Cancel and physically delete this shipment?');" style="margin: 0;">
-                <button type="submit" class="btn btn-delete">Obliterate Shipment</button>
-            </form>
+			<a th:href="@{/frontend/shipments/delete(id=${shipment.shipmentId})}" class="btn btn-delete">
+			    Obliterate Shipment
+			</a>
             <a th:href="@{/frontend/shipments}" class="btn btn-outline">&larr; Tracking Board</a>
         </div>
     </div>

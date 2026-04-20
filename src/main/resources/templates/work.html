@@ -270,23 +270,29 @@
           <a href="javascript:void(0)" onclick="let sid = prompt('Enter Store ID:'); if(!sid) return false; let pid = prompt('Enter Product ID:'); if(pid) { let f=document.createElement('form'); f.method='post'; f.action='/frontend/stores/'+sid+'/inventory/delete?productId='+pid; document.body.appendChild(f); f.submit(); } return false;" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         
-        <!-- Shipping Service Mapping -->
-        <span th:if="${endpoint == 'GET /api/v1/shipments' || endpoint == 'POST /api/v1/shipments'}">
-          <a th:href="@{/frontend/shipments}" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
-        </span>
-        <span th:if="${endpoint == 'GET /api/v1/shipments/{id}' || endpoint == 'PATCH /api/v1/shipments/{id}/status'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Shipment ID:'); if(id) window.location.href='/frontend/shipments/'+id; return false;" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
-        </span>
-        <span th:if="${endpoint == 'DELETE /api/v1/shipments/{id}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Shipment ID to Delete:'); if(id) { let f=document.createElement('form'); f.method='post'; f.action='/frontend/shipments/'+id+'/delete'; document.body.appendChild(f); f.submit(); } return false;" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
-        </span>
-        <span th:if="${endpoint == 'GET /api/v1/shipments/customer/{cid}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Customer ID for Shipments:'); if(id) window.location.href='/frontend/shipments?customerId='+id; return false;" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
-        </span>
-        <span th:if="${endpoint == 'GET /api/v1/shipments/store/{sid}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Store ID for Shipments:'); if(id) window.location.href='/frontend/shipments?storeId='+id; return false;" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
-        </span>
+		<span th:if="${endpoint == 'GET /api/v1/shipments'}">
+		  <a th:href="@{/frontend/shipments}" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+		</span>
 
+		<span th:if="${endpoint == 'POST /api/v1/shipments'}">
+		  <a th:href="@{/frontend/shipments/add}" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+		</span>
+
+		<span th:if="${endpoint == 'GET /api/v1/shipments/{id}' || endpoint == 'PATCH /api/v1/shipments/{id}/status'}">
+		  <a href="javascript:void(0)" onclick="let id = prompt('Enter Shipment ID:'); if(id) window.location.href='/frontend/shipments/'+id; return false;" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+		</span>
+
+		<span th:if="${endpoint == 'DELETE /api/v1/shipments/{id}'}">
+		  <a th:href="@{/frontend/shipments/delete}" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+		</span>
+
+		<span th:if="${endpoint == 'GET /api/v1/shipments/customer/{cid}'}">
+		  <a href="javascript:void(0)" onclick="let id = prompt('Enter Customer ID for Shipments:'); if(id) window.location.href='/frontend/shipments?customerId='+id; return false;" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+		</span>
+
+		<span th:if="${endpoint == 'GET /api/v1/shipments/store/{sid}'}">
+		  <a href="javascript:void(0)" onclick="let id = prompt('Enter Store ID for Shipments:'); if(id) window.location.href='/frontend/shipments?storeId='+id; return false;" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+		</span>
         <span th:unless="${endpoint.contains('/api/v1/products') || endpoint.contains('/api/v1/customers') || endpoint.contains('/api/v1/orders') || endpoint.contains('/api/v1/stores') || endpoint.contains('/api/v1/inventory') || endpoint.contains('/api/v1/shipments')}" style="color: #93c5fd; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</span>
       </div>
     </div>
