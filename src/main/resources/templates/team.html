@@ -5,63 +5,187 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title th:text="${projectName} + ' — Team'">Team</title>
   <link rel="stylesheet" th:href="@{/css/style.css}"/>
+  <style>
+    /* ===== GLOBAL ===== */
+    body {
+        background: linear-gradient(135deg, #dbeafe, #eaf3ff);
+        min-height: 100vh;
+        color: #000;
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 4rem 1.5rem;
+    }
+
+    /* ===== BACK LINK ===== */
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #64748b;
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 2.5rem;
+        transition: color 0.2s ease;
+    }
+
+    .back-link:hover {
+        color: #1e293b;
+    }
+
+    /* ===== HEADER ===== */
+    .page-header {
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .page-eyebrow {
+        color: #3b82f6;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #1e3a8a !important;
+        background: none !important;
+        -webkit-background-clip: initial !important;
+        -webkit-text-fill-color: initial !important;
+        margin: 0;
+    }
+
+    .title-bar {
+        width: 60px;
+        height: 4px;
+        background: #3b82f6;
+        margin: 1.5rem auto 0;
+        border-radius: 2px;
+    }
+
+    /* ===== MEMBER CARD ===== */
+    .member-card {
+        background: #ffffff !important;
+        border: 1px solid #dbeafe;
+        border-radius: 16px;
+        padding: 1.5rem 2rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        transform: none !important;
+    }
+
+    .member-card:hover {
+        background: #ffffff !important;
+        transform: none !important;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .avatar-wrap {
+        position: relative;
+    }
+
+    .avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid #3b82f6;
+    }
+
+    .member-info {
+        flex: 1;
+    }
+
+    .member-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 0.25rem;
+    }
+
+    .member-role {
+        color: #64748b;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .work-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #3b82f6;
+        border: 1px solid #3b82f6;
+        color: #ffffff;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+    }
+
+    .work-btn:hover {
+        background: #2563eb;
+        border-color: #2563eb;
+    }
+
+    .footer-note {
+        text-align: center;
+        margin-top: 4rem;
+        color: #94a3b8;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+  </style>
 </head>
 <body>
-<div class="glow-orb"></div>
 
 <div class="wrapper">
 
-  <!-- Back to home -->
   <a th:href="@{/}" class="back-link">
-    <svg width="14" height="14" fill="none" stroke="currentColor"
-         stroke-width="2.5" viewBox="0 0 24 24">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
       <path d="M19 12H5M11 6l-6 6 6 6"/>
     </svg>
-    Back to Home
+    Return Home
   </a>
 
-  <!-- Page header -->
   <div class="page-header">
     <p class="page-eyebrow" th:text="${projectName}">Order Inventory Management</p>
     <h1 class="page-title">Meet the Team</h1>
     <div class="title-bar"></div>
   </div>
 
-  <!--
-    th:each loops over the members list.
-    th:text    → renders the field value as text content.
-    th:href    → builds the URL dynamically  e.g. /work/vishal
-  -->
   <div class="member-card" th:each="member : ${members}">
-
-    <!-- LEFT: avatar + number -->
     <div class="avatar-wrap">
       <div class="avatar">
         <img th:src="@{${member.photoUrl}}"
              th:alt="${member.name}"
              style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"/>
       </div>
-      <span class="member-num-badge" th:text="${member.paddedNumber}">01</span>
     </div>
 
-    <!-- MIDDLE: name + role -->
     <div class="member-info">
       <div class="member-name" th:text="${member.name}">Member Name</div>
       <div class="member-role" th:text="${member.role}">Team Member</div>
     </div>
 
-    <!-- RIGHT: Work button → /work/{slug} -->
-    <a class="work-btn"
-       th:href="@{/work/{slug}(slug=${member.workPage})}">
+    <a class="work-btn" th:href="@{/work/{slug}(slug=${member.workPage})}">
       Work
-      <svg width="13" height="13" fill="none" stroke="currentColor"
-           stroke-width="2.5" viewBox="0 0 24 24">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
         <path d="M5 12h14M13 6l6 6-6 6"/>
       </svg>
     </a>
-
   </div>
-  <!-- end th:each -->
 
   <p class="footer-note" th:text="${projectName} + ' · 2026'">Footer</p>
 

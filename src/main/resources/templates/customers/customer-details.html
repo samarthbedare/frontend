@@ -6,6 +6,15 @@
     <title>Customer Profile</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
     <style>
+        /* ===== GLOBAL ===== */
+        body {
+            background: linear-gradient(135deg, #dbeafe, #eaf3ff);
+            min-height: 100vh;
+            color: #000;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
         .details-wrapper {
             display: flex;
             align-items: center;
@@ -15,15 +24,13 @@
         }
 
         .details-card {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(139, 92, 246, 0.2);
+            background: #ffffff;
+            border: 1px solid #dbeafe;
             border-radius: 16px;
             padding: 3rem 2.5rem;
             width: 100%;
             max-width: 550px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: fadeUp 0.6s ease forwards;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         .details-header {
@@ -33,31 +40,30 @@
         }
 
         .avatar-circle {
-            width: 80px; height: 80px;
+            width: 90px; height: 90px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
             display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; font-family: 'Syne', sans-serif; font-weight: bold; color: white;
+            font-size: 2.2rem; font-weight: bold; color: white;
             margin: 0 auto 1.5rem auto;
-            box-shadow: 0 10px 20px -5px rgba(139,92,246,0.5);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
         }
 
         .details-title {
-            font-family: 'Syne', sans-serif;
             font-size: 2rem;
             font-weight: 800;
-            color: #fff;
+            color: #1e293b;
             margin-bottom: 0.5rem;
         }
 
         .badge-email {
             display: inline-block;
-            padding: 0.4rem 1rem;
-            background: rgba(59, 130, 246, 0.1);
-            color: #93c5fd;
-            border: 1px dashed rgba(59,130,246,0.3);
+            padding: 0.4rem 1.2rem;
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
         }
 
@@ -67,24 +73,27 @@
         }
 
         .detail-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 1rem 1.5rem;
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            padding: 1.2rem 1.5rem;
             border-radius: 12px;
-            display: flex; justify-content: space-between; align-items: center;
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            align-items: center;
+            gap: 1.5rem;
         }
 
         .detail-label {
-            font-size: 0.75rem;
-            color: #94a3b8;
+            font-size: 0.8rem;
+            color: #64748b;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            font-weight: 700;
         }
 
         .detail-value {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #f1f5f9;
+            color: #1e293b;
         }
 
         .btn-flex {
@@ -101,45 +110,40 @@
             font-weight: 600;
             font-size: 0.95rem;
             transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
         }
 
         .btn-outline {
-            border: 1px solid rgba(148, 163, 184, 0.4);
-            color: #cbd5e1;
-            background: transparent;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            background: #ffffff;
         }
 
         .btn-outline:hover {
-            border-color: #f1f5f9;
-            color: #fff;
-            background: rgba(255,255,255,0.05);
+            background: #f1f5f9;
+            color: #1e293b;
+            border-color: #94a3b8;
         }
 
         .btn-edit {
-            background: rgba(252, 211, 77, 0.1);
-            color: #fcd34d;
-            border: 1px solid rgba(252, 211, 77, 0.4);
+            background: #fffbeb;
+            color: #ca8a04;
+            border: 1px solid #fde68a;
         }
 
         .btn-edit:hover {
-            background: rgba(252, 211, 77, 0.2);
-            color: #fff;
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            background: #fef3c7;
+            color: #b45309;
         }
     </style>
 </head>
 <body>
-<div class="glow-orb" style="background: radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 60%);"></div>
 <div class="details-wrapper">
     <div class="details-card">
-        
         <div class="details-header">
-            <div style="position: absolute; top: 0; left: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #64748b;">
-                ID_REF: <span th:text="${customer.customerId}">1</span>
+            <div style="position: absolute; top: 0; left: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #94a3b8;">
+                REF: #<span th:text="${customer.customerId}">1</span>
             </div>
             
             <div class="avatar-circle" th:text="${customer.fullName != null && customer.fullName.length() > 0 ? customer.fullName.substring(0,1).toUpperCase() : 'C'}">C</div>

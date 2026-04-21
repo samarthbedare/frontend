@@ -6,51 +6,219 @@
     <title>Store Details</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
     <style>
-        .dashboard-container { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem; animation: fadeUp 0.6s ease forwards; }
-        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); padding: 1.5rem 2rem; border-radius: 16px; border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.4); }
-        .header-title { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        
-        .card-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; margin-bottom: 2rem; }
-        
-        .glass-card { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(16px); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.05); padding: 2rem; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); }
-        .card-title { color: #a78bfa; font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.8rem; margin-bottom: 1.5rem; }
-        
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        .info-label { font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 0.3rem; }
-        .info-value { font-size: 1.1rem; color: #f8fafc; font-weight: 500; }
-        
-        .styled-table { width: 100%; border-collapse: collapse; text-align: left; }
-        .styled-table thead tr { background: rgba(15, 23, 42, 0.8); color: #c4b5fd; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; }
-        .styled-table th, .styled-table td { padding: 1.2rem 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: #fff; }
-        .styled-table tbody tr:hover { background: rgba(139, 92, 246, 0.08); }
-        
-        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; cursor: pointer; border: none; }
-        .btn-outline { border: 1px solid rgba(148, 163, 184, 0.4); color: #cbd5e1; background: transparent; }
-        .btn-outline:hover { border-color: #f1f5f9; color: #fff; background: rgba(255,255,255,0.05); }
-        .btn-primary { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; }
-        .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
-        .btn-delete { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
-        .btn-success { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); }
-        
-        .form-control { width: 100%; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-family: inherit; margin-bottom: 0.5rem; }
-        .form-label { display: block; margin-bottom: 0.5rem; color: #cbd5e1; font-size: 0.9rem; }
-        
-        .val-badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
-        
-        .error-banner { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
-        .success-banner { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #6ee7b7; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        /* ===== GLOBAL ===== */
+        body {
+            background: linear-gradient(135deg, #dbeafe, #eaf3ff);
+            min-height: 100vh;
+            color: #000;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* ===== CONTAINER ===== */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        /* ===== HEADER ===== */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            background: #ffffff;
+            padding: 1.5rem 2rem;
+            border: 1px solid #dbeafe;
+        }
+
+        /* ===== TITLE ===== */
+        .header-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .glass-card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #dbeafe;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            color: #1e293b;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 0;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .styled-table thead tr {
+            background: #3b82f6;
+            color: #ffffff;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .styled-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-outline {
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            background: #ffffff;
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.75rem;
+        }
+
+        .btn-delete {
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            background: #ffffff;
+        }
+
+        .btn-delete:hover {
+            background: #fef2f2;
+        }
+
+        .btn-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #86efac;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            color: #000;
+            font-family: inherit;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #334155;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .val-badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* BANNERS */
+        .error-banner {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .success-banner {
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
-<div class="glow-orb" style="background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%);"></div>
 <div class="dashboard-container">
     <div class="dashboard-header">
         <div>
             <h1 class="header-title" th:text="${store.storeName}">Store Name</h1>
-            <p style="color: #94a3b8; margin: 0.5rem 0 0 0; font-size: 0.9rem;" th:text="${'Store ID: ' + store.storeId}">Store ID</p>
+            <p style="color: #475569; margin: 0.5rem 0 0 0; font-size: 0.9rem;" th:text="${'Store ID: ' + store.storeId}">Store ID</p>
         </div>
         <div style="display: flex; gap: 1rem;">
             <form th:action="@{/frontend/stores/{id}/delete(id=${store.storeId})}" method="post" onsubmit="return confirm('Delete this store permanently?');" style="margin: 0;">
@@ -70,7 +238,7 @@
             <div class="info-grid" style="grid-template-columns: 1fr;">
                 <div>
                     <div class="info-label">Web Address</div>
-                    <div class="info-value"><a th:href="${store.webAddress}" th:text="${store.webAddress != null ? store.webAddress : 'N/A'}" style="color:#c4b5fd" target="_blank">URL</a></div>
+                    <div class="info-value"><a th:href="${store.webAddress}" th:text="${store.webAddress != null ? store.webAddress : 'N/A'}" style="color:#2563eb" target="_blank">URL</a></div>
                 </div>
                 <div>
                     <div class="info-label">Physical Address</div>
@@ -89,8 +257,8 @@
             </div>
 
             <!-- Update Store Form -->
-            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 2rem 0;">
-            <h3 style="color: #cbd5e1; font-size: 1rem; margin-bottom: 1rem;">Update Details</h3>
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 2rem 0;">
+            <h3 style="color: #334155; font-size: 1rem; margin-bottom: 1rem; font-weight: 700;">Update Details</h3>
             <form th:action="@{/frontend/stores/{id}/update(id=${store.storeId})}" method="post">
                 <input type="hidden" name="storeId" th:value="${store.storeId}"/>
                 <div class="form-group" style="margin-bottom:1rem;">
@@ -138,26 +306,26 @@
                         </tr>
                     </thead>
                     <tbody th:if="${#lists.isEmpty(inventoryList)}">
-                        <tr><td colspan="4" style="text-align:center; padding:2rem; color:#94a3b8;">No inventory tracked at this store.</td></tr>
+                        <tr><td colspan="4" style="text-align:center; padding:2rem; color:#64748b;">No inventory tracked at this store.</td></tr>
                     </tbody>
                     <tbody th:unless="${#lists.isEmpty(inventoryList)}">
                         <tr th:each="inv : ${inventoryList}">
-                            <td style="font-family: 'JetBrains Mono', monospace; color: #94a3b8;" th:text="${inv.inventoryId}">1</td>
+                            <td th:text="${inv.inventoryId}">1</td>
                             <td th:text="${inv.productId}">1</td>
-                            <td><span class="val-badge" style="background: rgba(16, 185, 129, 0.15); color: #6ee7b7;" th:text="${inv.productInventory}">10</span></td>
+                            <td><span class="val-badge" style="background: #d1fae5; color: #065f46;" th:text="${inv.productInventory}">10</span></td>
                             <td>
                                 <!-- Inline Action buttons for + / - Stock -->
                                 <div style="display: flex; gap: 0.5rem; align-items:center;">
                                     <form th:action="@{/frontend/stores/{id}/inventory/updateStock(id=${store.storeId})}" method="post" style="display:flex; gap:0.2rem;">
                                         <input type="hidden" name="productId" th:value="${inv.productId}"/>
                                         <input type="hidden" name="action" value="reduce"/>
-                                        <input type="number" name="quantity" value="1" min="1" max="1000" style="width:50px; background: rgba(0,0,0,0.3); border:1px solid #444; color:#fff; border-radius:4px; text-align:center;"/>
+                                        <input type="number" name="quantity" value="1" min="1" max="1000" style="width:50px; background: #ffffff; border:1px solid #cbd5e1; color:#000; border-radius:4px; text-align:center;"/>
                                         <button type="submit" class="btn btn-outline btn-sm">-</button>
                                     </form>
                                     <form th:action="@{/frontend/stores/{id}/inventory/updateStock(id=${store.storeId})}" method="post" style="display:flex; gap:0.2rem;">
                                         <input type="hidden" name="productId" th:value="${inv.productId}"/>
                                         <input type="hidden" name="action" value="add"/>
-                                        <input type="number" name="quantity" value="1" min="1" max="1000" style="width:50px; background: rgba(0,0,0,0.3); border:1px solid #444; color:#fff; border-radius:4px; text-align:center;"/>
+                                        <input type="number" name="quantity" value="1" min="1" max="1000" style="width:50px; background: #ffffff; border:1px solid #cbd5e1; color:#000; border-radius:4px; text-align:center;"/>
                                         <button type="submit" class="btn btn-success btn-sm">+</button>
                                     </form>
                                     
@@ -174,7 +342,7 @@
             </div>
 
             <!-- Add new inventory to store form -->
-            <div style="padding: 1.5rem 2rem; background: rgba(15, 23, 42, 0.4); border-top: 1px solid rgba(255,255,255,0.05);">
+            <div style="padding: 1.5rem 2rem; background: #f8fafc; border-top: 1px solid #e2e8f0;">
                 <form th:action="@{/frontend/stores/{id}/inventory(id=${store.storeId})}" method="post" style="display:flex; gap:1rem; align-items: flex-end;">
                     <div style="flex:1;">
                         <label class="form-label" style="font-size:0.8rem;">Product ID</label>

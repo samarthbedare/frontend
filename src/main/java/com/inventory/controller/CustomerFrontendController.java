@@ -25,10 +25,20 @@ public class CustomerFrontendController {
     }
 
     @GetMapping
-    public String viewCustomers(HttpServletRequest request, Model model) {
+    public String viewCustomers(@RequestParam(value = "filterId", required = false) Long filterId, HttpServletRequest request, Model model) {
         String token = SessionJwtUtil.getJwt(request);
         try {
-            List<Customer> customers = customerServiceClient.getAllCustomers(token);
+            List<Customer> customers;
+            if (filterId != null) {
+                try {
+                    Customer c = customerServiceClient.getCustomerById(filterId, token);
+                    customers = Collections.singletonList(c);
+                } catch (Exception e) {
+                    customers = Collections.emptyList();
+                }
+            } else {
+                customers = customerServiceClient.getAllCustomers(token);
+            }
             model.addAttribute("customers", customers);
             return "customers/customers";
         } catch (Exception e) {
@@ -92,6 +102,7 @@ public class CustomerFrontendController {
             boolean isValid = customerServiceClient.validateCustomer(id, token);
             if (isValid) {
                 redirectAttrs.addFlashAttribute("successMessage", "Validation Passed: Customer ID " + id + " exists.");
+                return "redirect:/frontend/customers?filterId=" + id;
             } else {
                 redirectAttrs.addFlashAttribute("error", "Validation Failed: Customer ID " + id + " does not exist.");
             }

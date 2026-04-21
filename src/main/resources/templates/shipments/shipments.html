@@ -6,67 +6,205 @@
     <title>Shipment Logistics</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
     <style>
-        .dashboard-container { max-width: 1100px; margin: 0 auto; padding: 3rem 1.5rem; animation: fadeUp 0.6s ease forwards; }
-        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); padding: 1.5rem 2rem; border-radius: 16px; border: 1px solid rgba(139, 92, 246, 0.2); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.4); }
-        .header-title { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #c4b5fd, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        
-        .filter-form { background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255,255,255,0.05); padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-        .filter-input { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 0.6rem 1rem; border-radius: 8px; font-family: inherit; flex: 1; min-width: 150px; }
-        
-        .glass-table-wrapper { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(16px); border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.05); overflow: hidden; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5); }
-        .styled-table { width: 100%; border-collapse: collapse; text-align: left; }
-        .styled-table thead tr { background: rgba(15, 23, 42, 0.8); color: #c4b5fd; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; }
-        .styled-table th, .styled-table td { padding: 1.2rem 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-        .styled-table tbody tr:hover { background: rgba(139, 92, 246, 0.08); transform: scale(1.002); }
-        
-        .val-badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-        
-        .action-flex { display: flex; gap: 0.5rem; }
-        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease; cursor: pointer; border: none; }
-        .btn-outline { border: 1px solid rgba(148, 163, 184, 0.4); color: #cbd5e1; background: transparent; }
-        .btn-outline:hover { border-color: #f1f5f9; color: #fff; background: rgba(255,255,255,0.05); }
-        .btn-primary { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; }
-        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
-        .btn-delete { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
-        
-        .error-banner { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
-        .success-banner { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #6ee7b7; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* ===== GLOBAL ===== */
+        body {
+            background: linear-gradient(135deg, #dbeafe, #eaf3ff);
+            min-height: 100vh;
+            color: #000;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* ===== CONTAINER ===== */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        /* ===== HEADER ===== */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            background: #ffffff;
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            border: 1px solid #dbeafe;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        /* ===== FILTER ===== */
+        .filter-form {
+            background: #ffffff;
+            border: 1px solid #dbeafe;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-input {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #000;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        /* ===== TABLE ===== */
+        .glass-table-wrapper {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #dbeafe;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .styled-table thead tr {
+            background: #3b82f6;
+            color: #ffffff;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .styled-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        /* ===== BADGES ===== */
+        .val-badge {
+            display: inline-block;
+            padding: 0.3rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-created { background: #f1f5f9; color: #475569; }
+        .status-transit { background: #dbeafe; color: #1e40af; }
+        .status-delivered { background: #dcfce7; color: #166534; }
+        .status-unknown { background: #fef3c7; color: #92400e; }
+
+        /* ===== BUTTONS ===== */
+        .action-flex {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.65rem 1.3rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-outline {
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            background: #ffffff;
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+            color: #1e293b;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-sm {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        /* BANNERS */
+        .error-banner, .success-banner {
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 500;
+        }
+
+        .error-banner { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+        .success-banner { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
     </style>
 </head>
 <body>
-<div class="glow-orb" style="background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%);"></div>
 <div class="dashboard-container">
     <div class="dashboard-header">
         <div>
             <h1 class="header-title">Logistics Tracking</h1>
-            <p style="color: #94a3b8; margin: 0.5rem 0 0 0; font-size: 0.9rem;" th:text="${'Focusing Network Scope: ' + filterContext}">Viewing Network Scope</p>
+            <p style="color: #64748b; margin: 0.5rem 0 0 0; font-size: 0.95rem;" th:text="${'Focusing Network Scope: ' + filterContext}">Viewing Network Scope</p>
         </div>
-        <div style="display: flex; gap: 1rem;">
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
             <a th:href="@{/frontend/shipments/add}" class="btn btn-primary">+ Log Shipment</a>
-            <a th:href="@{/team}" class="btn btn-outline">&larr; Team</a>
+            <a th:href="@{/team}" class="btn btn-outline">Team</a>
         </div>
     </div>
 
     <!-- Filter System -->
     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-        <form class="filter-form" th:action="@{/frontend/shipments}" method="get" style="flex: 1;">
-            <span style="font-size: 0.85rem; font-weight: bold; color: #93c5fd; text-transform: uppercase;">By Customer: </span>
+        <form class="filter-form" th:action="@{/frontend/shipments}" method="get" style="flex: 1; border-color: #dbeafe;">
+            <b style="font-size: 0.85rem; color: #3b82f6; text-transform: uppercase;">By Customer: </b>
             <input type="number" name="customerId" placeholder="Customer ID" class="filter-input" required min="1"/>
-            <button type="submit" class="btn btn-outline">Query</button>
+            <button type="submit" class="btn btn-outline" style="border-color: #3b82f6; color: #2563eb;">Query</button>
         </form>
-        <form class="filter-form" th:action="@{/frontend/shipments}" method="get" style="flex: 1;">
-            <span style="font-size: 0.85rem; font-weight: bold; color: #a78bfa; text-transform: uppercase;">By Store: </span>
+        <form class="filter-form" th:action="@{/frontend/shipments}" method="get" style="flex: 1; border-color: #dbeafe;">
+            <b style="font-size: 0.85rem; color: #3b82f6; text-transform: uppercase;">By Store: </b>
             <input type="number" name="storeId" placeholder="Store ID" class="filter-input" required min="1"/>
-            <button type="submit" class="btn btn-outline">Query</button>
+            <button type="submit" class="btn btn-outline" style="border-color: #3b82f6; color: #2563eb;">Query</button>
         </form>
-        <form class="filter-form" onsubmit="event.preventDefault(); window.location.href='/frontend/shipments/' + document.getElementById('searchShipmentId').value;" style="flex: 1;">
-            <span style="font-size: 0.85rem; font-weight: bold; color: #6ee7b7; text-transform: uppercase;">By Shipment ID: </span>
-            <input type="number" id="searchShipmentId" placeholder="Tracking Number" class="filter-input" required min="1"/>
-            <button type="submit" class="btn btn-outline">Locate</button>
+        <form class="filter-form" onsubmit="event.preventDefault(); window.location.href='/frontend/shipments/' + document.getElementById('searchShipmentId').value;" style="flex: 1; background: #f0fdf4; border-color: #bbf7d0;">
+            <b style="font-size: 0.85rem; color: #16a34a; text-transform: uppercase;">By ID: </b>
+            <input type="number" id="searchShipmentId" placeholder="Tracking Number" class="filter-input" required min="1" style="border-color: #bbf7d0;"/>
+            <button type="submit" class="btn btn-outline" style="border-color: #16a34a; color: #15803d;">Locate</button>
         </form>
         <div style="display:flex; align-items:center; margin-bottom:1rem;">
-            <a th:href="@{/frontend/shipments}" class="btn btn-outline" style="font-size:0.8rem; padding:0.6rem;">Clear Filters</a>
+            <a th:href="@{/frontend/shipments}" class="btn btn-outline" style="font-size:0.8rem; padding:0.6rem;">Clear</a>
         </div>
     </div>
 
@@ -86,27 +224,25 @@
             </thead>
             <tbody>
                 <tr th:each="shipment : ${shipments}">
-                    <td style="font-family: 'JetBrains Mono', monospace; color: #94a3b8;" th:text="${'#' + shipment.shipmentId}">#1</td>
+                    <td style="font-family: 'JetBrains Mono', monospace; color: #64748b;" th:text="${'#' + shipment.shipmentId}">#1</td>
                     <td th:text="${shipment.customerId}">Cust1</td>
                     <td th:text="${shipment.storeId}">Store1</td>
                     <td>
-                        <span th:if="${shipment.shipmentStatus == 'CREATED'}" class="val-badge" style="background: rgba(148, 163, 184, 0.15); color: #cbd5e1;">Created</span>
-                        <span th:if="${shipment.shipmentStatus == 'IN-TRANSIT'}" class="val-badge" style="background: rgba(59, 130, 246, 0.15); color: #93c5fd;">In Transit</span>
-                        <span th:if="${shipment.shipmentStatus == 'DELIVERED'}" class="val-badge" style="background: rgba(16, 185, 129, 0.15); color: #6ee7b7;">Delivered</span>
-                        <span th:if="${shipment.shipmentStatus != 'CREATED' && shipment.shipmentStatus != 'IN-TRANSIT' && shipment.shipmentStatus != 'DELIVERED'}" class="val-badge" style="background: rgba(245, 158, 11, 0.15); color: #fcd34d;" th:text="${shipment.shipmentStatus}">Unknown</span>
+                        <span th:if="${shipment.shipmentStatus == 'CREATED'}" class="val-badge status-created">Created</span>
+                        <span th:if="${shipment.shipmentStatus == 'IN-TRANSIT'}" class="val-badge status-transit">In Transit</span>
+                        <span th:if="${shipment.shipmentStatus == 'DELIVERED'}" class="val-badge status-delivered">Delivered</span>
+                        <span th:if="${shipment.shipmentStatus != 'CREATED' && shipment.shipmentStatus != 'IN-TRANSIT' && shipment.shipmentStatus != 'DELIVERED'}" class="val-badge status-unknown" th:text="${shipment.shipmentStatus}">Unknown</span>
                     </td>
                     <td class="action-flex">
                         <a th:href="@{/frontend/shipments/{id}(id=${shipment.shipmentId})}" class="btn btn-outline btn-sm">Manage</a>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(shipments)}">
-                    <td colspan="5" style="text-align: center; color: #94a3b8; padding: 3rem;">No shipments found matching criteria.</td>
+                    <td colspan="5" style="text-align: center; color: #64748b; padding: 3rem;">No shipments found matching criteria.</td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
-
-
 </body>
 </html>
