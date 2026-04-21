@@ -79,6 +79,30 @@ public class StoreInventoryFrontendController {
         }
     }
 
+    @GetMapping("/new")
+    public String showCreateStoreForm(Model model) {
+        model.addAttribute("store", new Store());
+        model.addAttribute("isEdit", false);
+        return "stores/store-form";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String showEditStoreForm(@PathVariable Long id, HttpServletRequest request, Model model, RedirectAttributes redirectAttrs) {
+        String token = SessionJwtUtil.getJwt(request);
+        try {
+            Store store = storeServiceClient.getStoreById(id, token);
+            model.addAttribute("store", store);
+            model.addAttribute("isEdit", true);
+            return "stores/store-form";
+        } catch (Exception e) {
+            if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
+                return "redirect:/login?reqLogin=true";
+            }
+            redirectAttrs.addFlashAttribute("error", "Failed to load store for editing: " + e.getMessage());
+            return "redirect:/frontend/stores";
+        }
+    }
+
     @PostMapping
     public String createStore(@ModelAttribute Store store, HttpServletRequest request, RedirectAttributes redirectAttrs) {
         String token = SessionJwtUtil.getJwt(request);
