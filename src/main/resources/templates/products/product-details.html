@@ -1,192 +1,260 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Product Details</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
-    <style>
-        .details-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 2rem;
-        }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Product Details</title>
 
-        .details-card {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 16px;
-            padding: 3rem 2.5rem;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: fadeUp 0.6s ease forwards;
-        }
+<style>
 
-        .details-header {
-            text-align: center;
-            margin-bottom: 2rem;
-            position: relative;
-        }
+/* ===== BACKGROUND ===== */
+body {
+    background: linear-gradient(135deg, #dbeafe, #edf4ff);
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
 
-        .details-title {
-            font-family: 'Syne', sans-serif;
-            font-size: 2.2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #60a5fa, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-        }
+/* ===== WRAPPER ===== */
+.details-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
 
-        .badge-brand {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            background: rgba(59, 130, 246, 0.15);
-            color: #93c5fd;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
+/* ===== CARD ===== */
+.details-card {
+    background: #ffffff;
+    border: 1px solid #dbeafe;
+    border-radius: 14px;
+    padding: 2.8rem;
+    width: 100%;
+    max-width: 650px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
 
-        .details-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
+/* ===== HEADER (LIKE DARK UI STRUCTURE) ===== */
+.details-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+    padding: 1.5rem;
+    border: 1px solid #e0ecff;
+    border-radius: 12px;
+    background: #f8fbff;
+}
 
-        .detail-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-        }
+.details-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
 
-        .detail-label {
-            display: block;
-            font-size: 0.75rem;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.5rem;
-        }
+.badge-brand {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background: #e0ecff;
+    color: #2563eb;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 6px;
+}
 
-        .detail-value {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #f1f5f9;
-        }
+/* ===== GRID ===== */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
 
-        .value-price {
-            font-family: 'JetBrains Mono', monospace;
-            color: #fca5a5;
-            font-size: 1.3rem;
-        }
+/* ===== ITEM ===== */
+.detail-item {
+    background: #f8fbff;              /* light blue background */
+    border: 1px solid #bfdbfe;        /* soft blue border */
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    transition: 0.2s;
+}
 
-        .btn-flex {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 1rem;
-        }
+.detail-item:hover {
+    border-color: #93c5fd;
+    box-shadow: 0 3px 8px rgba(59,130,246,0.08);
+}
 
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
+.detail-label {
+    font-size: 0.7rem;
+    color: #64748b;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+}
 
-        .btn-outline {
-            border: 1px solid rgba(148, 163, 184, 0.4);
-            color: #cbd5e1;
-            background: transparent;
-        }
+.detail-value {
+    margin-top: 4px;
+}
 
-        .btn-outline:hover {
-            border-color: #f1f5f9;
-            color: #fff;
-            background: rgba(255,255,255,0.05);
-        }
+/* ===== PRICE ===== */
+.value-price {
+    color: #dc2626;
+}
 
-        .btn-edit {
-            background: rgba(252, 211, 77, 0.1);
-            color: #fcd34d;
-            border: 1px solid rgba(252, 211, 77, 0.4);
-        }
+/* ===== COLOR DOT ===== */
+.color-dot {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    display: inline-block;
+}
 
-        .btn-edit:hover {
-            background: rgba(252, 211, 77, 0.2);
-            color: #fff;
-        }
+.color-red { background: #ef4444; }
+.color-green { background: #10b981; }
+.color-blue { background: #3b82f6; }
+.color-black { background: #000; }
+.color-yellow { background: #facc15; }
+.color-white { background: #e5e7eb; }
 
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+/* ===== META (LIKE SECTION CARD) ===== */
+.meta-box {
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1.1rem 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: #64748b;
+    background: #f8fbff;
+}
+
+/* ===== BUTTONS ===== */
+.btn-flex {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+}
+
+/* SAME SIZE BUTTONS */
+.btn {
+    height: 40px;
+    min-width: 115px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* neutral */
+.btn-outline {
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    background: #fff;
+}
+
+/* blue */
+.btn-blue {
+    border: 1px solid #3b82f6;
+    color: #2563eb;
+    background: #fff;
+}
+
+/* edit */
+.btn-edit {
+    border: 1px solid #facc15;
+    color: #f59e0b;
+    background: #fff;
+}
+
+/* delete */
+.btn-delete {
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    background: #fff;
+}
+
+</style>
 </head>
+
 <body>
-<div class="glow-orb"></div>
+
 <div class="details-wrapper">
-    <div class="details-card">
-        
-        <div class="details-header">
-            <div style="position: absolute; top: 0; left: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #64748b;">
-                ID: <span th:text="${product.productId}">1</span>
-            </div>
-            <h1 class="details-title" th:text="${product.productName}">Product Name</h1>
-            <span class="badge-brand" th:text="${product.brand}">Brand</span>
-        </div>
+<div class="details-card">
 
-        <div class="details-grid">
-            <div class="detail-item">
-                <span class="detail-label">Colour</span>
-                <div class="detail-value" style="display: flex; align-items: center; gap: 8px;">
-                    <span th:style="'display: inline-block; width: 14px; height: 14px; border-radius: 50%; opacity: 0.9; background-color: ' + ${product.colour != null ? (product.colour.toUpperCase() == 'BROWN' ? '#8B4513' : (product.colour.toUpperCase() == 'BLUE' ? '#3b82f6' : (product.colour.toUpperCase() == 'GREEN' ? '#10b981' : (product.colour.toUpperCase() == 'RED' ? '#ef4444' : (product.colour.toUpperCase() == 'BLACK' ? '#1e293b' : '#94a3b8'))))) : '#94a3b8'}"></span>
-                    <span th:text="${product.colour}">Red</span>
-                </div>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Size</span>
-                <span class="detail-value" th:text="${product.size}">XL</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Unit Price</span>
-                <span class="detail-value value-price" th:text="'$' + ${product.unitPrice}">$19.99</span>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Rating</span>
-                <div class="detail-value">
-                    <span style="color: #fbbf24;">★ </span>
-                    <span th:text="${product.rating}">5.0</span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Assuming description exists logically or we can just leave it layout wise -->
-        <div class="detail-item" style="margin-bottom: 2rem;">
-            <span class="detail-label">System Meta</span>
-            <span class="detail-value" style="font-size: 0.9rem; font-weight: normal; color: #94a3b8;">
-                Fetched via /api/v1/products/[[${product.productId}]]
-            </span>
-        </div>
+<!-- HEADER -->
+<div class="details-header">
+    <div style="position:absolute; top:10px; left:15px; font-size:0.8rem; color:#64748b;">
+        ID: <span th:text="${product.productId}"></span>
+    </div>
 
-        <div class="btn-flex">
-            <a th:href="@{/team}" class="btn btn-outline" style="font-size: 0.85rem; padding: 0.8rem 1rem;">&larr; Team</a>
-            <a th:href="@{/frontend/products}" class="btn btn-outline">&larr; Catalog</a>
-            <a th:href="@{/frontend/products/{id}/edit(id=${product.productId})}" class="btn btn-edit">Edit Product</a>
-        </div>
-        
+    <h1 class="details-title" th:text="${product.productName}"></h1>
+    <span class="badge-brand" th:text="${product.brand}"></span>
+</div>
+
+<!-- GRID -->
+<div class="details-grid">
+
+<div class="detail-item">
+    <span class="detail-label">Colour</span>
+    <div class="detail-value" style="display:flex; gap:8px; align-items:center;">
+        <span class="color-dot"
+              th:classappend="' color-' + ${#strings.toLowerCase(product.colour)}"></span>
+        <span th:text="${product.colour}"></span>
     </div>
 </div>
+
+<div class="detail-item">
+    <span class="detail-label">Size</span>
+    <div class="detail-value">
+        <span th:text="${product.size}"></span>
+    </div>
+</div>
+
+<div class="detail-item">
+    <span class="detail-label">Unit Price</span>
+    <div class="detail-value value-price">
+        <span th:text="'$' + ${product.unitPrice}"></span>
+    </div>
+</div>
+
+<div class="detail-item">
+    <span class="detail-label">Rating</span>
+    <div class="detail-value">
+        <span style="color:#f59e0b;">★</span>
+        <span th:text="${product.rating}"></span>
+    </div>
+</div>
+
+</div>
+
+<!-- META -->
+<div class="meta-box">
+    /api/v1/products/<span th:text="${product.productId}"></span>
+</div>
+
+<!-- BUTTONS -->
+<div class="btn-flex">
+
+<a th:href="@{/team}" class="btn btn-outline">Team</a>
+
+<a th:href="@{/frontend/products}" class="btn btn-blue">Catalog</a>
+
+<a th:href="@{/frontend/products/{id}/edit(id=${product.productId})}" 
+   class="btn btn-edit">Edit</a>
+
+<form th:action="@{/frontend/products/{id}/delete(id=${product.productId})}" method="post">
+<button class="btn btn-delete"
+onclick="return confirm('Delete this product?')">
+Delete
+</button>
+</form>
+
+</div>
+
+</div>
+</div>
+
 </body>
 </html>
