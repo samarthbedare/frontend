@@ -146,6 +146,19 @@
         font-size: 0.85rem;
         font-weight: 500;
     }
+
+    /* BANNERS */
+    .banner {
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-weight: 600;
+    }
+    .error-banner { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .success-banner { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
   </style>
 </head>
 <body>
@@ -158,6 +171,17 @@
     </svg>
     Return Home
   </a>
+
+  <!-- Notification Banners -->
+  <div th:if="${error}" class="banner error-banner">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+    <span th:text="${error}"></span>
+  </div>
+
+  <div th:if="${successMessage}" class="banner success-banner">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+    <span th:text="${successMessage}"></span>
+  </div>
 
   <div class="page-header">
     <p class="page-eyebrow" th:text="${projectName}">Order Inventory Management</p>
