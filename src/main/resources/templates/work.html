@@ -278,13 +278,13 @@
           <a th:href="@{/frontend/products/new}" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'GET /api/v1/products/{id}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Product ID:'); if(id) window.location.href='/frontend/products/'+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Product ID:'); if(id) window.location.href='/frontend/products/'+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'DELETE /api/v1/products/{id}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Product ID to delete:'); if(id) { let f=document.createElement('form'); f.method='post'; f.action='/frontend/products/'+id+'/delete'; document.body.appendChild(f); f.submit(); } return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Product ID to delete:'); if(id) { let f=document.createElement('form'); f.method='post'; f.action='/frontend/products/'+id+'/delete'; document.body.appendChild(f); f.submit(); } return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'PATCH /api/v1/products/{id}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Product ID to Edit:'); if(id) window.location.href='/frontend/products/'+id+'/edit'; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Product ID to Edit:'); if(id) window.location.href='/frontend/products/'+id+'/edit'; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
 
         <!-- Customer Service Mapping -->
@@ -295,16 +295,16 @@
           <a th:href="@{/frontend/customers/new}" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'GET /api/v1/customers/{id}' || endpoint == 'GET /api/v1/customers/validate/{id}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Customer ID:'); if(id) window.location.href='/frontend/customers/'+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Customer ID:'); if(id) window.location.href='/frontend/customers/'+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'DELETE /api/v1/customers/{id}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Customer ID to Delete:'); if(id) { let f=document.createElement('form'); f.method='post'; f.action='/frontend/customers/'+id+'/delete'; document.body.appendChild(f); f.submit(); } return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Customer ID to Delete:'); if(id) { let f=document.createElement('form'); f.method='post'; f.action='/frontend/customers/'+id+'/delete'; document.body.appendChild(f); f.submit(); } return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'PUT /api/v1/customers/{id}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Customer ID to Edit:'); if(id) window.location.href='/frontend/customers/'+id+'/edit'; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Customer ID to Edit:'); if(id) window.location.href='/frontend/customers/'+id+'/edit'; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'GET /api/v1/customers/email/{email}'}">
-          <a href="javascript:void(0)" onclick="let em = prompt('Enter Customer Email:'); if(em) window.location.href='/frontend/customers/email/'+em; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let em = safePrompt('Enter Customer Email:', false); if(em) window.location.href='/frontend/customers/email/'+em; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
 
         <!-- Order Service Mapping -->
@@ -315,16 +315,16 @@
           <a th:href="@{/frontend/orders/new}" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'GET /api/v1/orders/{id}' || endpoint == 'PATCH /api/v1/orders/{id}/status' || endpoint == 'PATCH /api/v1/orders/{id}/shipment'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Order ID:'); if(id) window.location.href='/frontend/orders/'+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Order ID:'); if(id) window.location.href='/frontend/orders/'+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'DELETE /api/v1/orders/{id}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Order ID to Delete:'); if(id) { let f=document.createElement('form'); f.method='post'; f.action='/frontend/orders/'+id+'/delete'; document.body.appendChild(f); f.submit(); } return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Order ID to Delete:'); if(id) { let f=document.createElement('form'); f.method='post'; f.action='/frontend/orders/'+id+'/delete'; document.body.appendChild(f); f.submit(); } return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'GET /api/v1/orders/customer/{cid}'}">
-          <a href="javascript:void(0)" onclick="let cid = prompt('Enter Customer ID for Orders:'); if(cid) window.location.href='/frontend/orders/customer/'+cid; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let cid = safePrompt('Enter Customer ID for Orders:'); if(cid) window.location.href='/frontend/orders/customer/'+cid; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'GET /api/v1/orders/store/{sid}'}">
-          <a href="javascript:void(0)" onclick="let sid = prompt('Enter Store ID for Orders:'); if(sid) window.location.href='/frontend/orders/store/'+sid; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let sid = safePrompt('Enter Store ID for Orders:'); if(sid) window.location.href='/frontend/orders/store/'+sid; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
 
         <!-- Store Service Mapping -->
@@ -338,13 +338,13 @@
           <a th:href="@{/frontend/stores}" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'GET /api/v1/stores/{id}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Store ID:'); if(id) window.location.href='/frontend/stores/'+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Store ID:'); if(id) window.location.href='/frontend/stores/'+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'DELETE /api/v1/stores/{id}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Store ID to Delete:'); if(id) { let f=document.createElement('form'); f.method='post'; f.action='/frontend/stores/'+id+'/delete'; document.body.appendChild(f); f.submit(); } return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Store ID to Delete:'); if(id) { let f=document.createElement('form'); f.method='post'; f.action='/frontend/stores/'+id+'/delete'; document.body.appendChild(f); f.submit(); } return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'PUT /api/v1/stores/{id}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Store ID to Edit:'); if(id) window.location.href='/frontend/stores/'+id+'/edit'; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Store ID to Edit:'); if(id) window.location.href='/frontend/stores/'+id+'/edit'; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
 
         <!-- Inventory Service Mapping -->
@@ -352,16 +352,16 @@
           <a th:href="@{/frontend/inventory}" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'GET /api/v1/inventory/product/{pid}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Product ID for Inventory:'); if(id) window.location.href='/frontend/inventory?productId='+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Product ID for Inventory:'); if(id) window.location.href='/frontend/inventory?productId='+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'GET /api/v1/inventory/store/{sid}'}">
-          <a href="javascript:void(0)" onclick="let id = prompt('Enter Store ID for Inventory:'); if(id) window.location.href='/frontend/inventory?storeId='+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Store ID for Inventory:'); if(id) window.location.href='/frontend/inventory?storeId='+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'POST /api/v1/inventory' || endpoint == 'PATCH /api/v1/inventory/add' || endpoint == 'PATCH /api/v1/inventory/reduce'}">
-          <a href="javascript:void(0)" onclick="let sid = prompt('Enter Store ID to manage inventory:'); if(sid) window.location.href='/frontend/inventory?storeId='+sid; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let sid = safePrompt('Enter Store ID to manage inventory:'); if(sid) window.location.href='/frontend/inventory?storeId='+sid; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'DELETE /api/v1/inventory/store/{sid}/product/{pid}'}">
-          <a href="javascript:void(0)" onclick="let sid = prompt('Enter Store ID:'); if(!sid) return false; let pid = prompt('Enter Product ID:'); if(pid) { let f=document.createElement('form'); f.method='post'; f.action='/frontend/stores/'+sid+'/inventory/delete?productId='+pid; document.body.appendChild(f); f.submit(); } return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let sid = safePrompt('Enter Store ID:'); if(!sid) return false; let pid = safePrompt('Enter Product ID:'); if(pid) { let f=document.createElement('form'); f.method='post'; f.action='/frontend/stores/'+sid+'/inventory/delete?productId='+pid; document.body.appendChild(f); f.submit(); } return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         
         <!-- Shipment Service Mapping -->
@@ -372,16 +372,16 @@
 		  <a th:href="@{/frontend/shipments/add}" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
 		</span>
 		<span th:if="${endpoint == 'GET /api/v1/shipments/{id}' || endpoint == 'PATCH /api/v1/shipments/{id}/status'}">
-		  <a href="javascript:void(0)" onclick="let id = prompt('Enter Shipment ID:'); if(id) window.location.href='/frontend/shipments/'+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+		  <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Shipment ID:'); if(id) window.location.href='/frontend/shipments/'+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
 		</span>
 		<span th:if="${endpoint == 'DELETE /api/v1/shipments/{id}'}">
 		  <a th:href="@{/frontend/shipments/delete}" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
 		</span>
 		<span th:if="${endpoint == 'GET /api/v1/shipments/customer/{cid}'}">
-		  <a href="javascript:void(0)" onclick="let id = prompt('Enter Customer ID for Shipments:'); if(id) window.location.href='/frontend/shipments?customerId='+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+		  <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Customer ID for Shipments:'); if(id) window.location.href='/frontend/shipments?customerId='+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
 		</span>
 		<span th:if="${endpoint == 'GET /api/v1/shipments/store/{sid}'}">
-		  <a href="javascript:void(0)" onclick="let id = prompt('Enter Store ID for Shipments:'); if(id) window.location.href='/frontend/shipments?storeId='+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+		  <a href="javascript:void(0)" onclick="let id = safePrompt('Enter Store ID for Shipments:'); if(id) window.location.href='/frontend/shipments?storeId='+id; return false;" class="endpoint-link" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
 		</span>
         
         <span th:unless="${endpoint.contains('/api/v1/')}" class="section-body" style="font-family: inherit; font-weight: 700;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</span>
@@ -392,5 +392,30 @@
   <p class="footer-note" th:text="${projectName} + ' · 2026'">Footer</p>
 
 </div>
+
+<script>
+  /**
+   * Helper to prompt user and validate input.
+   * @param {string} message - The prompt message.
+   * @param {boolean} checkId - If true, ensures the input is numeric.
+   * @returns {string|null} - The validated input or null if cancelled/invalid.
+   */
+  function safePrompt(message, checkId = true) {
+    const val = prompt(message);
+    if (val === null) return null; // Cancelled
+    const trimmed = val.trim();
+    if (trimmed === "") return null; // Empty
+
+    if (checkId) {
+      if (/^\d+$/.test(trimmed)) {
+        return trimmed;
+      } else {
+        alert("Invalid ID: Please enter a numeric value (e.g., 1, 2, 3).");
+        return null;
+      }
+    }
+    return trimmed;
+  }
+</script>
 </body>
 </html>
