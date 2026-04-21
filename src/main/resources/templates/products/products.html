@@ -1,282 +1,301 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Products Dashboard</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
-    <style>
-        .dashboard-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 3rem 1.5rem;
-            animation: fadeUp 0.6s ease forwards;
-        }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Products Dashboard</title>
 
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem 2rem;
-            border-radius: 16px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
-        }
+<style>
 
-        .header-title {
-            font-family: 'Syne', sans-serif;
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #93c5fd, #fff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
-        }
+/* ===== GLOBAL ===== */
+body {
+    background: linear-gradient(135deg, #dbeafe, #eaf3ff);
+    min-height: 100vh;
+    color: #000;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
 
-        .filter-form {
-            background: rgba(15, 23, 42, 0.4);
-            border: 1px solid rgba(255,255,255,0.05);
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-        
-        .filter-input {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #fff;
-            padding: 0.6rem 1rem;
-            border-radius: 8px;
-            font-family: inherit;
-        }
+/* ===== CONTAINER ===== */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+}
 
-        .glass-table-wrapper {
-            background: rgba(30, 41, 59, 0.5);
-            backdrop-filter: blur(16px);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            overflow: hidden;
-            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.4);
-        }
+/* ===== HEADER ===== */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    background: #ffffff;
+    padding: 1.5rem 2rem;
+    border: 1px solid #dbeafe;
+}
 
-        .styled-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
+/* ===== TITLE ===== */
+.header-title {
+    font-size: 2rem;
+    font-weight: 800;
+}
 
-        .styled-table thead tr {
-            background: rgba(15, 23, 42, 0.8);
-            color: #93c5fd;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
-        }
+/* ===== FILTER ===== */
+.filter-form {
+    background: #ffffff;
+    border: 1px solid #dbeafe;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
 
-        .styled-table th,
-        .styled-table td {
-            padding: 1.2rem 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
+/* ===== INPUT ===== */
+.filter-input {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #000;
+    padding: 0.6rem 1rem;
+}
 
-        .styled-table tbody tr {
-            transition: all 0.2s ease;
-        }
+/* ===== TABLE ===== */
+.glass-table-wrapper {
+    background: #ffffff;
+    border: 1px solid #dbeafe;
+}
 
-        .styled-table tbody tr:hover {
-            background: rgba(59, 130, 246, 0.08);
-            transform: scale(1.002);
-        }
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+}
 
-        .val-badge {
-            display: inline-block;
-            padding: 0.25rem 0.6rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .badge-brand { background: rgba(59, 130, 246, 0.15); color: #93c5fd; }
-        .badge-size { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3); }
-        
-        .price-val {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: bold;
-            color: #fca5a5;
-        }
+.styled-table thead tr {
+    background: #3b82f6;
+    color: #ffffff;
+}
 
-        .action-flex {
-            display: flex;
-            gap: 0.5rem;
-        }
+.styled-table th,
+.styled-table td {
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
 
-        .btn {
-            display: inline-block;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-        }
+.styled-table tbody tr:hover {
+    background: #f8fafc;
+}
 
-        .btn-outline {
-            border: 1px solid rgba(148, 163, 184, 0.4);
-            color: #cbd5e1;
-            background: transparent;
-        }
+/* ===== BADGES ===== */
+.val-badge {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+}
 
-        .btn-outline:hover {
-            border-color: #f1f5f9;
-            color: #fff;
-            background: rgba(255,255,255,0.05);
-        }
+.badge-brand {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
 
-        .btn-primary {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: white;
-            border: none;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(59,130,246,0.3);
-        }
+.badge-size {
+    background: #d1fae5;
+    color: #065f46;
+}
 
-        .btn-sm {
-            padding: 0.3rem 0.6rem;
-            font-size: 0.75rem;
-        }
+/* ===== PRICE ===== */
+.price-val {
+    font-weight: bold;
+    color: #dc2626;
+}
 
-        .btn-delete {
-            background: rgba(239, 68, 68, 0.15);
-            color: #fca5a5;
-            border: 1px solid rgba(239,68,68,0.3);
-        }
-        .btn-delete:hover {
-            background: rgba(239, 68, 68, 0.3);
-            color: white;
-        }
+/* ===== BUTTONS ===== */
+.btn {
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
 
-        .error-banner {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
+.btn-outline {
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    background: #ffffff;
+}
 
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+}
+
+/* DELETE BUTTON */
+.btn-delete {
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    background: #ffffff;
+}
+
+/* CLEAR BUTTON */
+.btn-clear {
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #64748b;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+}
+
+/* COLOR DOT */
+.color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.color-red { background: #ef4444; }
+.color-green { background: #10b981; }
+.color-blue { background: #3b82f6; }
+.color-black { background: #000; }
+.color-yellow { background: #facc15; }
+.color-white { background: #e5e7eb; }
+
+/* ERROR */
+.error-banner {
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    color: #991b1b;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+.btn-view {
+    border: 1px solid #3b82f6;
+    color: #3b82f6;
+    background: #ffffff;
+}
+
+.btn-view:hover {
+    background: #eff6ff;
+}
+
+</style>
 </head>
+
 <body>
-<div class="glow-orb"></div>
 
 <div class="dashboard-container">
-    <div class="dashboard-header">
-        <div>
-            <h1 class="header-title">Product Catalog (Validated)</h1>
-            <p style="color: #94a3b8; margin: 0.5rem 0 0 0; font-size: 0.9rem;">
-                Manage your complete inventory directly mapped via APIs
-            </p>
-        </div>
-        <div style="display: flex; gap: 1rem; align-items: center;">
-            <a th:href="@{/frontend/products/new}" class="btn btn-primary">+ New Product</a>
-            <a th:href="@{/team}" class="btn btn-outline">&larr; Team</a>
-            <a th:href="@{/work/narayani}" class="btn btn-outline">Module Details</a>
-            <a th:href="@{/logout}" class="btn btn-outline" style="border-color: rgba(239,68,68,0.4); color: #fca5a5;">Logout Admin</a>
-        </div>
+
+<!-- HEADER -->
+<div class="dashboard-header">
+    <div>
+        <h1 class="header-title">Product Catalog</h1>
+        <p style="color:#475569;">Manage your inventory</p>
     </div>
+
+    <div style="display:flex; gap:1rem;">
+        <a th:href="@{/frontend/products/new}" class="btn btn-primary">+ New Product</a>
+        <a th:href="@{/team}" class="btn btn-outline">Team</a>
+        <a th:href="@{/work/narayani}" class="btn btn-outline">Module</a>
+        <a th:href="@{/logout}" class="btn btn-outline">Logout</a>
+    </div>
+</div>
+
+<!-- FILTER -->
+<form class="filter-form" th:action="@{/frontend/products}" method="get">
+    <b>Filters:</b>
+    <input name="name" th:value="${name}" placeholder="Name" class="filter-input"/>
+    <input name="brand" th:value="${brand}" placeholder="Brand" class="filter-input"/>
+    <input name="colour" th:value="${colour}" placeholder="Colour" class="filter-input"/>
+    <input name="size" th:value="${size}" placeholder="Size" class="filter-input"/>
+    <button class="btn btn-outline">Apply</button>
+    <a th:href="@{/frontend/products}" class="btn-clear">Clear</a>
+</form>
+
+<!-- LOOKUP -->
+<form class="filter-form" th:action="@{/frontend/products/search}" method="get">
+    <b>Direct Lookup:</b>
+    <input type="number" name="id" placeholder="Product ID" class="filter-input"/>
+    <button class="btn btn-outline">Find</button>
+</form>
+
+<!-- SUCCESS -->
+<div th:if="${successMessage}" 
+     style="background:#dcfce7; color:#166534; padding:1rem; margin-bottom:1rem; border:1px solid #86efac; text-align:center; border-radius:6px;">
     
-    <!-- Filter Bar -->
-    <form class="filter-form" th:action="@{/frontend/products}" method="get">
-        <span style="font-size: 0.85rem; font-weight: bold; color: #94a3b8; text-transform: uppercase;">Filters: </span>
-        <input type="text" name="name" th:value="${name}" placeholder="Name (e.g. Jacket)" class="filter-input" />
-        <input type="text" name="brand" th:value="${brand}" placeholder="Brand (e.g. Zara)" class="filter-input" />
-        <input type="text" name="colour" th:value="${colour}" placeholder="Colour (e.g. RED)" class="filter-input" />
-        <input type="text" name="size" th:value="${size}" placeholder="Size (e.g. XL)" class="filter-input" />
-        <button type="submit" class="btn btn-outline" style="background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.4); color: #93c5fd;">Apply Filter</button>
-        <a th:href="@{/frontend/products}" style="color: #64748b; font-size: 0.85rem; text-decoration: none; margin-left: 0.5rem;">Clear</a>
-    </form>
+    <span th:text="${successMessage}"></span>
+</div>
 
-    <form class="filter-form" style="margin-top: -1rem; background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.1);" th:action="@{/frontend/products/search}" method="get">
-        <span style="font-size: 0.85rem; font-weight: bold; color: #6ee7b7; text-transform: uppercase;">Direct Lookup: </span>
-        <input type="number" name="id" placeholder="Product ID (e.g. 1)" class="filter-input" required style="max-width: 150px;" />
-        <button type="submit" class="btn btn-outline" style="background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.4); color: #6ee7b7;">Find via ID</button>
-    </form>
+<!-- ERROR -->
+<div th:if="${error}" class="error-banner">
+    <span th:text="${error}"></span>
+</div>
 
-    <!-- Alert Banners -->
-    <div th:if="${error}" class="error-banner">
-        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-        <span th:text="${error}"></span>
-    </div>
+<!-- TABLE -->
+<div class="glass-table-wrapper">
+<table class="styled-table">
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Brand</th>
+<th>Colour</th>
+<th>Size</th>
+<th>Price</th>
+<th>Rating</th>
+<th>Actions</th>
+</tr>
+</thead>
 
-    <div th:if="${successMessage}" class="success-banner">
-        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-        <span th:text="${successMessage}"></span>
-    </div>
+<tbody>
+<tr th:each="product : ${products}">
 
-    <div class="glass-table-wrapper">
-        <table class="styled-table">
-            <thead>
-                <tr>
-                    <th>Ref ID</th>
-                    <th>Product Name</th>
-                    <th>Brand</th>
-                    <th>Colour</th>
-                    <th>Size</th>
-                    <th>Unit Price</th>
-                    <th>Rating</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="product : ${products}">
-                    <td style="font-family: 'JetBrains Mono', monospace; color: #94a3b8;" th:text="${product.productId}">1</td>
-                    <td style="font-weight: bold; color: #fff;" th:text="${product.productName}">T-Shirt</td>
-                    <td><span class="val-badge badge-brand" th:text="${product.brand}">Zara</span></td>
-                    <td>
-                        <span style="display: inline-flex; align-items: center; gap: 6px;">
-                            <span th:style="'display: inline-block; width: 12px; height: 12px; border-radius: 50%; opacity: 0.8; background-color: ' + ${product.colour != null ? (product.colour.toUpperCase() == 'BROWN' ? '#8B4513' : (product.colour.toUpperCase() == 'BLUE' ? '#3b82f6' : (product.colour.toUpperCase() == 'GREEN' ? '#10b981' : (product.colour.toUpperCase() == 'RED' ? '#ef4444' : (product.colour.toUpperCase() == 'BLACK' ? '#1e293b' : '#94a3b8'))))) : '#94a3b8'}"></span>
-                            <span th:text="${product.colour}">Red</span>
-                        </span>
-                    </td>
-                    <td><span class="val-badge badge-size" th:text="${product.size}">M</span></td>
-                    <td class="price-val" th:text="'$' + ${product.unitPrice}">$19.99</td>
-                    <td>
-                        <span style="color: #fbbf24;">★ </span>
-                        <span th:text="${product.rating}" style="font-weight: 600; color: #e2e8f0;">5.0</span>
-                    </td>
-                    <td class="action-flex">
-                        <a th:href="@{/frontend/products/{id}(id=${product.productId})}" class="btn btn-outline btn-sm">View</a>
-                        <a th:href="@{/frontend/products/{id}/edit(id=${product.productId})}" class="btn btn-outline btn-sm" style="color: #fcd34d; border-color: rgba(252,211,77,0.3);">Edit</a>
-                        <form th:action="@{/frontend/products/{id}/delete(id=${product.productId})}" method="post" onsubmit="return confirm('Delete this product permanently?');">
-                            <button type="submit" class="btn btn-delete btn-sm">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(products)}">
-                    <td colspan="8" style="text-align: center; color: #94a3b8; padding: 3rem;">
-                        No products available matching your search criteria.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+<td th:text="${product.productId}"></td>
+
+<td style="font-weight:bold;" th:text="${product.productName}"></td>
+
+<td><span class="val-badge badge-brand" th:text="${product.brand}"></span></td>
+
+<td>
+<span style="display:flex; align-items:center; gap:6px;">
+<span class="color-dot"
+      th:classappend="' color-' + ${#strings.toLowerCase(product.colour)}"></span>
+<span th:text="${product.colour}"></span>
+</span>
+</td>
+
+<td><span class="val-badge badge-size" th:text="${product.size}"></span></td>
+
+<td class="price-val" th:text="'$'+${product.unitPrice}"></td>
+
+<td>
+<span style="color:#f59e0b;">★</span>
+<span th:text="${product.rating}"></span>
+</td>
+
+<td style="display:flex; gap:6px;">
+
+<a th:href="@{/frontend/products/{id}(id=${product.productId})}" class="btn btn-view">View</a>
+
+<a th:href="@{/frontend/products/{id}/edit(id=${product.productId})}" class="btn btn-outline">Edit</a>
+
+<form th:action="@{/frontend/products/{id}/delete(id=${product.productId})}" method="post">
+<button type="submit" class="btn btn-delete"
+onclick="return confirm('Delete this product?')">Delete</button>
+</form>
+
+</td>
+
+</tr>
+
+<tr th:if="${#lists.isEmpty(products)}">
+<td colspan="8" style="text-align:center;">No products found</td>
+</tr>
+
+</tbody>
+</table>
+</div>
 
 </div>
+
 </body>
 </html>
