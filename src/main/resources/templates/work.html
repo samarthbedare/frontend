@@ -264,7 +264,7 @@
           <a href="javascript:void(0)" onclick="let id = prompt('Enter Store ID for Inventory:'); if(id) window.location.href='/frontend/inventory?storeId='+id; return false;" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'POST /api/v1/inventory' || endpoint == 'PATCH /api/v1/inventory/add' || endpoint == 'PATCH /api/v1/inventory/reduce'}">
-          <a th:href="@{/frontend/inventory}" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
+          <a href="javascript:void(0)" onclick="let id = prompt('Enter Store ID for Inventory Operations:'); if(id) window.location.href='/frontend/stores/'+id; return false;" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
         </span>
         <span th:if="${endpoint == 'DELETE /api/v1/inventory/store/{sid}/product/{pid}'}">
           <a href="javascript:void(0)" onclick="let sid = prompt('Enter Store ID:'); if(!sid) return false; let pid = prompt('Enter Product ID:'); if(pid) { let f=document.createElement('form'); f.method='post'; f.action='/frontend/stores/'+sid+'/inventory/delete?productId='+pid; document.body.appendChild(f); f.submit(); } return false;" style="color: #93c5fd; text-decoration: underline; font-weight: bold; overflow-x: auto; white-space: nowrap;" th:text="${endpoint.split(' ')[1]}">/api/endpoint</a>
