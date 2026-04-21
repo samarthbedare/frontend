@@ -6,6 +6,15 @@
     <title>Delete Shipment</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
     <style>
+        /* ===== GLOBAL ===== */
+        body {
+            background: linear-gradient(135deg, #dbeafe, #eaf3ff);
+            min-height: 100vh;
+            color: #000;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
         .form-wrapper {
             display: flex;
             align-items: center;
@@ -15,42 +24,37 @@
         }
 
         .form-card {
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(239, 68, 68, 0.2);
+            background: #ffffff;
+            border: 1px solid #fee2e2;
             border-radius: 16px;
             padding: 3rem;
             width: 100%;
             max-width: 500px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: fadeUp 0.6s ease forwards;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         .form-title {
-            font-family: 'Syne', sans-serif;
             font-size: 2.2rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #fca5a5, #ef4444);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #1e293b;
             margin-bottom: 0.5rem;
             text-align: center;
         }
 
         .form-subtitle {
             text-align: center;
-            color: #94a3b8;
+            color: #64748b;
             margin-bottom: 2.5rem;
             font-size: 0.95rem;
         }
 
         .warning-box {
-            background: rgba(239, 68, 68, 0.07);
-            border: 1px solid rgba(239, 68, 68, 0.25);
-            border-radius: 10px;
-            padding: 1rem 1.25rem;
-            color: #fca5a5;
-            font-size: 0.88rem;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 1.25rem;
+            color: #991b1b;
+            font-size: 0.9rem;
             margin-bottom: 2rem;
             line-height: 1.6;
         }
@@ -64,19 +68,19 @@
 
         .form-label {
             font-size: 0.85rem;
-            color: #fca5a5;
+            color: #b91c1c;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .form-input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(239, 68, 68, 0.2);
+            background: #fff;
+            border: 1px solid #cbd5e1;
             border-radius: 8px;
-            padding: 0.9rem 1rem;
-            color: #fff;
+            padding: 0.9rem 1.1rem;
+            color: #000;
             font-family: inherit;
             font-size: 1rem;
             transition: all 0.3s ease;
@@ -86,11 +90,8 @@
         .form-input:focus {
             outline: none;
             border-color: #ef4444;
-            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
-            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
         }
-
-        .form-input::placeholder { color: #475569; }
 
         .form-actions {
             display: flex;
@@ -100,7 +101,7 @@
 
         .btn {
             flex: 1;
-            padding: 1rem;
+            padding: 0.9rem;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
@@ -117,76 +118,47 @@
         .btn-delete {
             background: linear-gradient(135deg, #ef4444, #b91c1c);
             color: #fff;
-            box-shadow: 0 10px 20px -10px rgba(239, 68, 68, 0.5);
+            box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3);
         }
 
         .btn-delete:hover {
             transform: translateY(-2px);
-            background: linear-gradient(135deg, #dc2626, #991b1b);
+            box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.4);
         }
 
         .btn-cancel {
-            background: transparent;
-            border: 1px solid rgba(148, 163, 184, 0.4);
-            color: #cbd5e1;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #475569;
             flex: 0.6;
         }
 
         .btn-cancel:hover {
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-            border-color: #f1f5f9;
+            background: #f1f5f9;
+            color: #1e293b;
+            border-color: #94a3b8;
         }
 
-        .error-banner {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-        }
-
-        .success-banner {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #6ee7b7;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+        .error-banner { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; font-size: 0.9rem; font-weight: 500; }
+        .success-banner { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; font-size: 0.9rem; font-weight: 500; }
     </style>
 </head>
 <body>
-<div class="glow-orb" style="background: radial-gradient(circle, rgba(239,68,68,0.12) 0%, transparent 60%);"></div>
-
 <div class="form-wrapper">
     <div class="form-card">
 
         <h1 class="form-title">Delete Shipment</h1>
         <p class="form-subtitle">Permanently remove a shipment record from the system</p>
 
-        <!-- Feedback banners (flash attributes passed via redirect) -->
+        <!-- Feedback banners -->
         <div th:if="${error}" class="error-banner" th:text="${error}"></div>
         <div th:if="${successMessage}" class="success-banner" th:text="${successMessage}"></div>
 
         <div class="warning-box">
             ⚠️ <strong>This action is irreversible.</strong> Deleting a shipment will permanently remove it from the
-            logistics database. If the shipment is linked to active orders, the operation will be blocked until
-            those orders are resolved.
+            logistics database. If the shipment is linked to active orders, the operation will be blocked.
         </div>
 
-        <!--
-            The form submits to /frontend/shipments/{id}/delete using the ID entered by the user.
-            JavaScript injects the value into the action URL before submission.
-        -->
         <div class="form-group">
             <label class="form-label">Shipment Tracking ID</label>
 			<input class="form-input" type="number" id="shipmentIdInput"
@@ -195,16 +167,15 @@
         </div>
 
         <div class="form-actions">
-            <a th:href="@{/frontend/shipments}" class="btn btn-cancel">&larr; Back</a>
+            <a th:href="@{/frontend/shipments}" class="btn btn-cancel">Back</a>
             <button type="button" class="btn btn-delete" onclick="submitDelete()">
-                Obliterate Shipment
+                Confirm Deletion
             </button>
         </div>
 
     </div>
 </div>
 
-<!-- Hidden form that does the actual POST once the user confirms -->
 <form id="deleteForm" method="post" style="display:none;"></form>
 
 <script>

@@ -137,7 +137,7 @@ public class ProductFrontendController {
             updates.put("rating", product.getRating());
 
             productServiceClient.updateProduct(id, updates, token);
-            redirectAttrs.addFlashAttribute("successMessage", "Product patched successfully.");
+            redirectAttrs.addFlashAttribute("successMessage", "Product Updated successfully.");
             return "redirect:/frontend/products";
         } catch (Exception e) {
             if (e.getMessage() != null && (e.getMessage().contains("403") || e.getMessage().contains("401"))) {
